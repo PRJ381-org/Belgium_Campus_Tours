@@ -11,7 +11,6 @@ import {
   downloadSummaryCsv,
   downloadTelemetryCsv,
 } from './export.js';
-import { loadFeedback } from './feedback.js';
 
 // Bail out to the login page immediately if there's no session at all.
 requireLogin();
@@ -237,9 +236,7 @@ const btnRefresh = document.getElementById('btn-refresh');
 if (btnRefresh) {
   btnRefresh.addEventListener('click', () => {
     btnRefresh.style.opacity = '0.6';
-    const tasks = [loadDashboard()];
-    if (isAdmin()) tasks.push(loadFeedback());
-    Promise.all(tasks).finally(() => {
+    loadDashboard().finally(() => {
       setTimeout(() => (btnRefresh.style.opacity = '1'), 300);
     });
   });
@@ -336,7 +333,6 @@ async function init() {
   setupExportListeners();
   setupQuickActionListeners();
   loadDashboard();
-  if (isUserAdmin) loadFeedback();
 }
 
 init();

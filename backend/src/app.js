@@ -11,6 +11,7 @@ const leadsRoutes = require('./routes/leads.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const exportRoutes = require('./routes/export.routes');
 const feedbackRoutes = require('./routes/feedback.routes');
+const downloadRoutes = require('./routes/download.routes');
 const notFound = require('./utils/notFound');
 const errorHandler = require('./utils/errorHandler');
 
@@ -58,15 +59,12 @@ app.use('/api/leads', leadsRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/export', exportRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/downloads', downloadRoutes);
 
-// The dashboard lives inside the app folder (not a sibling directory) so the
-// whole thing deploys as one self-contained zip. Served at "/"; index.html's
-// own script calls requireLogin() and bounces to login.html when there is no
-// session. That gating is presentation only - every data endpoint above is
-// still enforced server-side.
+// The web portal and dashboard live inside backend/public.
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// Old links pointed at /dashboard; keep them working.
+// Redirect legacy /dashboard URLs to /
 app.get(['/dashboard', '/dashboard/*'], (req, res) => res.redirect(302, '/'));
 
 app.use(notFound);

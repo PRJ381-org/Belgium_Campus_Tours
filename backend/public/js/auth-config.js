@@ -6,7 +6,7 @@
  * "Sign in with Microsoft" button instead of trying to use it.
  */
 export const MS_CONFIG = {
-  clientId: '', // Entra ID App Registration (Application) ID
-  tenantId: '', // Belgium Campus Entra ID tenant ID
+  clientId: '8942a4e9-dd74-463e-ad2b-251c244e4146', // Entra ID App Registration (Application) ID
+  tenantId: 'ea1a909b-6600-4a25-82a5-0c6ed7d0513b', // Belgium Campus Entra ID tenant ID
   redirectUri: window.location.origin + window.location.pathname,
 };
