@@ -100,6 +100,7 @@
             </svg>
             <span>Download for Windows</span>
           </a>
+          <button type="button" class="btn-guide-secondary" data-guide-trigger="windows">Installation Guide</button>
           <span class="download-subtext">Standalone .zip (No installation needed)</span>
         </div>
 
@@ -125,6 +126,7 @@
             </svg>
             <span>Download APK</span>
           </a>
+          <button type="button" class="btn-guide-secondary" data-guide-trigger="android">Installation Guide</button>
           <span class="download-subtext">Android 10.0+ (ARM64)</span>
         </div>
 
@@ -150,7 +152,141 @@
             </svg>
             <span>Download VR Build</span>
           </a>
+          <button type="button" class="btn-guide-secondary" data-guide-trigger="quest">Installation Guide</button>
           <span class="download-subtext">Meta Quest 2, 3 & Pro (Standalone)</span>
+        </div>
+      </div>
+
+      <!-- System Requirements Matrix -->
+      <div class="specs-section">
+        <div class="specs-header">
+          <h2>System Requirements</h2>
+          <p>Minimum and recommended hardware specifications for optimal performance.</p>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-card">
+            <h3>🪟 Windows Desktop</h3>
+            <ul class="spec-list">
+              <li><strong>OS:</strong> Windows 10 / 11 64-bit</li>
+              <li><strong>GPU:</strong> NVIDIA GTX 1060 / AMD RX 580 (DirectX 12)</li>
+              <li><strong>RAM:</strong> 8 GB (16 GB recommended)</li>
+              <li><strong>Storage:</strong> 3.0 GB free SSD/HDD space</li>
+            </ul>
+          </div>
+          <div class="spec-card">
+            <h3>📱 Android Mobile</h3>
+            <ul class="spec-list">
+              <li><strong>OS:</strong> Android 10.0 (API 29) or higher</li>
+              <li><strong>Architecture:</strong> ARM64-v8a</li>
+              <li><strong>RAM:</strong> 4 GB RAM minimum</li>
+              <li><strong>Storage:</strong> 1.5 GB free device storage</li>
+            </ul>
+          </div>
+          <div class="spec-card">
+            <h3>🥽 Meta Quest VR</h3>
+            <ul class="spec-list">
+              <li><strong>Headset:</strong> Meta Quest 2 / Quest 3 / Quest Pro</li>
+              <li><strong>Tracking:</strong> 6DoF Touch Controllers or Hands</li>
+              <li><strong>Runtime:</strong> Meta Horizon OS v50+ (OpenXR)</li>
+              <li><strong>Storage:</strong> 2.0 GB free headset storage</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Installation Walkthrough Modal -->
+      <div id="guide-modal" class="modal-backdrop" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-card">
+          <div class="modal-header">
+            <div class="modal-title-group">
+              <h2 id="modal-title">Installation Guide</h2>
+              <span class="modal-subtitle">Step-by-step setup instructions</span>
+            </div>
+            <button type="button" id="modal-close-btn" class="modal-close" aria-label="Close guide">&times;</button>
+          </div>
+
+          <div class="modal-tabs">
+            <button type="button" class="modal-tab-btn active" data-tab="windows">Windows PC</button>
+            <button type="button" class="modal-tab-btn" data-tab="android">Android Mobile</button>
+            <button type="button" class="modal-tab-btn" data-tab="quest">Meta Quest VR</button>
+          </div>
+
+          <div class="modal-body">
+            <!-- Windows Panel -->
+            <div class="guide-panel active" id="guide-panel-windows">
+              <div class="guide-step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                  <h4>Download & Extract</h4>
+                  <p>Download the <code>.zip</code> archive. Once downloaded, right-click the file and select <strong>"Extract All..."</strong> to uncompress the folder.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                  <h4>Launch Simulation</h4>
+                  <p>Open the extracted folder and double-click <strong><code>PRJ381.exe</code></strong> to start exploring.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                  <h4>Windows Defender / SmartScreen Prompt</h4>
+                  <p>If Windows displays a <em>"Windows protected your PC"</em> popup, click <strong>"More info"</strong> and then select <strong>"Run anyway"</strong>.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Android Panel -->
+            <div class="guide-panel" id="guide-panel-android">
+              <div class="guide-step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                  <h4>Download APK</h4>
+                  <p>Download the <code>.apk</code> package directly on your mobile device or transfer it via USB.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                  <h4>Enable Unknown Apps Permission</h4>
+                  <p>When opening the file, if prompted by Android, tap <strong>Settings</strong> and toggle on <strong>"Allow from this source"</strong>.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                  <h4>Install & Launch</h4>
+                  <p>Tap <strong>Install</strong>. Once finished, launch <em>Virtual Campus Open Day</em> from your app drawer.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Meta Quest Panel -->
+            <div class="guide-panel" id="guide-panel-quest">
+              <div class="guide-step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                  <h4>Option A: 1-Click ADB Installer (Recommended)</h4>
+                  <p>Connect your Quest headset to your PC with a USB-C cable (ensure Developer Mode is enabled in the Meta Horizon mobile app). Run <strong><code>Install_Quest.bat</code></strong> to automatically install the build.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                  <h4>Option B: SideQuest Sideloading</h4>
+                  <p>Open SideQuest on PC, connect your Quest headset, and drag-and-drop the <code>PRJ381-Quest3.apk</code> onto the SideQuest title bar to install.</p>
+                </div>
+              </div>
+              <div class="guide-step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                  <h4>Launch from Unknown Sources</h4>
+                  <p>Put on your headset, open your <strong>App Library</strong>, select the filter dropdown in the top-right, choose <strong>"Unknown Sources"</strong>, and tap <em>PRJ381</em>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -11,6 +11,7 @@ const EVENT_TYPES = [
   'hotspot_view',
   'info_request',
   'objective_complete',
+  'game_download',
 ];
 
 // Anonymous engagement telemetry. sessionId comes from Firebase anonymous auth;

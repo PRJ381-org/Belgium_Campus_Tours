@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Client-side Download Center Controller.
  * Handles platform auto-detection, live metadata updates from /api/downloads/info,
  * and card highlighting for prospective students.
@@ -85,9 +85,91 @@ export function applyPlatformHighlight(platform) {
   }
 }
 
+/**
+ * Opens the Installation Guide modal focused on a specific platform tab.
+ */
+export function openGuideModal(platform = 'windows') {
+  const modal = document.getElementById('guide-modal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  document.body.classList.add('modal-open');
+  selectGuideTab(platform);
+}
+
+/**
+ * Closes the Installation Guide modal.
+ */
+export function closeGuideModal() {
+  const modal = document.getElementById('guide-modal');
+  if (!modal) return;
+  modal.style.display = 'none';
+  document.body.classList.remove('modal-open');
+}
+
+/**
+ * Switches the active platform tab inside the Installation Guide modal.
+ */
+export function selectGuideTab(platform) {
+  const tabButtons = document.querySelectorAll('.modal-tab-btn');
+  const panels = document.querySelectorAll('.guide-panel');
+
+  tabButtons.forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.tab === platform);
+  });
+
+  panels.forEach((panel) => {
+    panel.classList.toggle('active', panel.id === `guide-panel-${platform}`);
+  });
+}
+
+/**
+ * Binds event listeners for modal triggers, tabs, close button, and backdrop.
+ */
+export function initGuideModalListeners() {
+  const triggers = document.querySelectorAll('[data-guide-trigger]');
+  const closeBtn = document.getElementById('modal-close-btn');
+  const modal = document.getElementById('guide-modal');
+  const tabButtons = document.querySelectorAll('.modal-tab-btn');
+
+  triggers.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const platform = btn.dataset.guideTrigger || 'windows';
+      openGuideModal(platform);
+    });
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeGuideModal);
+  }
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeGuideModal();
+      }
+    });
+  }
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const targetPlatform = btn.dataset.tab;
+      selectGuideTab(targetPlatform);
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && modal.style.display !== 'none') {
+      closeGuideModal();
+    }
+  });
+}
+
 // Initialise when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   const detected = detectUserPlatform();
   applyPlatformHighlight(detected);
   loadBuildInfo();
+  initGuideModalListeners();
 });
+
