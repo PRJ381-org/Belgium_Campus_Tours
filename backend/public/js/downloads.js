@@ -165,11 +165,31 @@ export function initGuideModalListeners() {
   });
 }
 
+/**
+ * Initialises FAQ accordion expand/collapse toggles.
+ */
+export function initFaqAccordion() {
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach((item) => {
+    const btn = item.querySelector('.faq-question');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('active');
+      faqItems.forEach((other) => {
+        if (other !== item) other.classList.remove('active');
+      });
+      item.classList.toggle('active', !isOpen);
+    });
+  });
+}
+
 // Initialise when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   const detected = detectUserPlatform();
   applyPlatformHighlight(detected);
   loadBuildInfo();
   initGuideModalListeners();
+  initFaqAccordion();
 });
+
 
