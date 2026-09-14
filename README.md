@@ -43,31 +43,33 @@ Automatically updated every Monday from our ClickUp board.
 Reference images: **[Campus Reference Images](https://belgiumcampusacza.sharepoint.com/:f:/s/PRJ3812026-STE-BCOM-Group3/IgBQnndqW5BwQLvyJaraki-zAdYiY74ln2q9eea4nOrb1PQ?e=GDixEC)**
 
 <!-- PROGRESS-REPORT:START -->
-### Weekly Progress Report — 07 Sep 2026
+### Weekly Progress Report — 14 Sep 2026
 
-_Reporting window: 31 Aug – 07 Sep 2026 · generated automatically from ClickUp_
+_Reporting window: 07 Sep – 14 Sep 2026 · generated automatically from ClickUp_
 
 | Metric | Count |
 |---|---|
-| Total tickets on board | 53 |
+| Total tickets on board | 56 |
 | ✅ Done (all time) | 23 |
-| 🔄 In progress | 13 |
+| 🔄 In progress | 16 |
 | 📋 To do | 17 |
-| 🎉 Completed this week | 2 |
-| 🆕 Created this week | 0 |
+| 🎉 Completed this week | 0 |
+| 🆕 Created this week | 3 |
 
 **🎉 Completed this week**
 
-- **Staff dashboard — view engagement analytics** — Chris Fourie, Joshua Arnold · [open](https://app.clickup.com/t/86cb7ep6x)
-- **OAuth2 staff/dev auth + analytics-writer role** — Joshua Arnold, Chris Fourie · [open](https://app.clickup.com/t/86cajkmh4)
+_Nothing marked done in the last 7 days._
 
 **🔄 In progress**
 
+- **APK Download Page** — Chris Fourie, Shaun van der Bijl · [open](https://app.clickup.com/t/86cbf58d0)
+- **Website Landing/Home Page** — Joshua Arnold, Chris Fourie · [open](https://app.clickup.com/t/86cbf581d)
+- **Main Quest-Line Planning** — Chris Fourie, Pandora Greyling, Fourie · [open](https://app.clickup.com/t/86cbf573b)
 - **Build lecturer MetaHumans in Unreal (MetaHuman plugin)** — Ethan Lindsay · [open](https://app.clickup.com/t/86cb94y08)
 - **Scan lecturers for MetaHuman capture (9 staff)** — Robert Van Der Merwe · [open](https://app.clickup.com/t/86cb94xy3)
 - **Offline lead cache + retry (Request-More-Info)** — Robert Van Der Merwe · [open](https://app.clickup.com/t/86cb7ep1t)
-- **Techno Lab NPC Logic** — Louis Schonborn, Fourie · [open](https://app.clickup.com/t/86cb0u8hx)
-- **Virtual Escape Room Game** — Louis Schonborn, liam dickson · [open](https://app.clickup.com/t/86cb0tym5)
+- **Techno Lab NPC Logic** — Fourie, Louis Schonborn · [open](https://app.clickup.com/t/86cb0u8hx)
+- **Virtual Escape Room Game** — liam dickson, Louis Schonborn · [open](https://app.clickup.com/t/86cb0tym5)
 - **Packaging the project and test functionality** — Shaun van der Bijl, Robert Van Der Merwe · [open](https://app.clickup.com/t/86cav821u)
 - **Test VR functionality (bug-free, engaging)** — unassigned · [open](https://app.clickup.com/t/86cajkmqd)
 - **Test assets for bugs & artifacts** — unassigned · [open](https://app.clickup.com/t/86cajkmq9)
@@ -79,10 +81,12 @@ _Reporting window: 31 Aug – 07 Sep 2026 · generated automatically from ClickU
 
 **📅 Due in the next 7 days**
 
-_Nothing due in the coming week._
+- **APK Download Page** — Chris Fourie, Shaun van der Bijl · [open](https://app.clickup.com/t/86cbf58d0)
 
 **⚠️ Overdue**
 
+- **Website Landing/Home Page** — Joshua Arnold, Chris Fourie · [open](https://app.clickup.com/t/86cbf581d)
+- **Main Quest-Line Planning** — Chris Fourie, Pandora Greyling, Fourie · [open](https://app.clickup.com/t/86cbf573b)
 - **Unreal client: send platform/buildId/appVersion + offline analytics queue** — Robert Van Der Merwe · [open](https://app.clickup.com/t/86cba4qfb)
 - **POPIA consent + likeness release forms for staff scans** — unassigned · [open](https://app.clickup.com/t/86cb94y7u)
 - **Optimise lecturer MetaHumans for 90fps VR + Android** — Ethan Lindsay, Shaun van der Bijl · [open](https://app.clickup.com/t/86cb94y5k)
@@ -91,8 +95,8 @@ _Nothing due in the coming week._
 - **Scan lecturers for MetaHuman capture (9 staff)** — Robert Van Der Merwe · [open](https://app.clickup.com/t/86cb94xy3)
 - **Firebase API-key restriction + secrets hardening (pre-ship)** — Robert Van Der Merwe · [open](https://app.clickup.com/t/86cb7epat)
 - **Offline lead cache + retry (Request-More-Info)** — Robert Van Der Merwe · [open](https://app.clickup.com/t/86cb7ep1t)
-- **Techno Lab NPC Logic** — Louis Schonborn, Fourie · [open](https://app.clickup.com/t/86cb0u8hx)
-- **Virtual Escape Room Game** — Louis Schonborn, liam dickson · [open](https://app.clickup.com/t/86cb0tym5)
+- **Techno Lab NPC Logic** — Fourie, Louis Schonborn · [open](https://app.clickup.com/t/86cb0u8hx)
+- **Virtual Escape Room Game** — liam dickson, Louis Schonborn · [open](https://app.clickup.com/t/86cb0tym5)
 - **Packaging the project and test functionality** — Shaun van der Bijl, Robert Van Der Merwe · [open](https://app.clickup.com/t/86cav821u)
 - **Final testing before deployment** — unassigned · [open](https://app.clickup.com/t/86cajkmre)
 - **Full application test (bug-free experience)** — unassigned · [open](https://app.clickup.com/t/86cajkmr6)
