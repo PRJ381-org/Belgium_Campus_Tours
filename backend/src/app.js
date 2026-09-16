@@ -12,6 +12,7 @@ const analyticsRoutes = require('./routes/analytics.routes');
 const exportRoutes = require('./routes/export.routes');
 const feedbackRoutes = require('./routes/feedback.routes');
 const downloadRoutes = require('./routes/download.routes');
+const downloadBuildRoutes = require('./routes/downloadBuildRoutes');
 const notFound = require('./utils/notFound');
 const errorHandler = require('./utils/errorHandler');
 
@@ -60,6 +61,8 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/export', exportRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/downloads', downloadRoutes);
+app.use('/api/download', downloadBuildRoutes);
+
 
 // The web portal and dashboard live inside backend/public.
 app.use(express.static(path.join(__dirname, '..', 'public')));

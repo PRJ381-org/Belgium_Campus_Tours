@@ -387,12 +387,20 @@ body {
 .btn-download {
   background: transparent;
   border: 1px solid var(--border);
-  color: var(--muted);
+  color: var(--text); /* Changed from muted to text so it looks active */
   font-size: 0.85rem;
   font-weight: 600;
   padding: 0.55rem 1.1rem;
   border-radius: 6px;
-  cursor: not-allowed;
+  cursor: pointer; /* Changed from not-allowed so the mouse shows a clicking hand */
+  transition: all 0.2s ease; /* Added a smooth transition */
+}
+
+/* Add this new block right below it to give it a nice hover effect! */
+.btn-download:hover {
+  border-color: var(--brand-yellow);
+  color: var(--brand-yellow);
+  background: rgba(245, 166, 35, 0.1);
 }
 
 /* Header & Branding */
