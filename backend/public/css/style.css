@@ -959,6 +959,22 @@ tbody tr:hover {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  position: relative;
+}
+
+.back-to-home {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.back-to-home:hover {
+  color: var(--text);
 }
 
 .login-card {
