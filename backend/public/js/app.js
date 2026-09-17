@@ -4,7 +4,7 @@
  * Coordinates authentication state, analytics data loading, chart rendering, and table interactions.
  */
 import { fetchJson } from './api.js';
-import { requireLogin, restoreSession, isAdmin, getCurrentUser, logout } from './auth.js';
+import { requireLogin, restoreSession, isAdmin, isMaster, getCurrentUser, logout } from './auth.js';
 import { renderEventTypeChart, renderAreaChart, renderHotspotChart, renderTimelineChart } from './charts.js';
 import {
   downloadLeadsCsv,
@@ -92,20 +92,54 @@ function renderUsers(users) {
   tbody.innerHTML = '';
 
   if (!users || users.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4">No registered users found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5">No registered users found.</td></tr>`;
     return;
   }
 
+  const currentUserId = getCurrentUser()?.id;
+  const canManageRoles = isMaster();
+
   for (const user of users) {
     const row = document.createElement('tr');
-    const roleBadgeClass = user.role === 'admin' ? 'role-admin' : 'role-viewer';
+    const roleBadgeClass =
+      user.role === 'master' ? 'role-master' : user.role === 'admin' ? 'role-admin' : 'role-viewer';
+    const isSelf = user._id === currentUserId;
+    const nextRole = user.role === 'admin' ? 'viewer' : 'admin';
+    const actionLabel = user.role === 'admin' ? 'Remove Admin' : 'Make Admin';
+
+    let actionsCell;
+    if (user.role === 'master') {
+      actionsCell = '<span class="action-note">Master account</span>';
+    } else if (isSelf) {
+      actionsCell = '<span class="action-note">This is you</span>';
+    } else if (canManageRoles) {
+      actionsCell = `<button class="btn-chip btn-role-toggle" data-user-id="${user._id}" data-next-role="${nextRole}">${actionLabel}</button>`;
+    } else {
+      actionsCell = '<span class="action-note">—</span>';
+    }
+
     row.innerHTML = `
       <td><strong>${user.name || 'Campus Member'}</strong></td>
       <td>${user.email}</td>
       <td><span class="role-badge ${roleBadgeClass}">${user.role || 'viewer'}</span></td>
       <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+      <td>${actionsCell}</td>
     `;
     tbody.appendChild(row);
+  }
+}
+
+async function handleRoleToggle(userId, nextRole) {
+  try {
+    await fetchJson(`/api/auth/users/${userId}/role`, {
+      method: 'PATCH',
+      body: JSON.stringify({ role: nextRole }),
+    });
+    const usersRes = await fetchJson('/api/auth/users').catch(() => ({ users: [] }));
+    allUsers = usersRes.users || [];
+    applyUsersFilterAndSort();
+  } catch (err) {
+    alert(`Could not update role: ${err.message}`);
   }
 }
 
@@ -182,6 +216,16 @@ function setupQuickActionListeners() {
       applyUsersFilterAndSort();
     });
   });
+
+  // Admin Promote/Demote Buttons (event delegation - rows re-render often)
+  const usersTableBody = document.querySelector('#users-table tbody');
+  if (usersTableBody) {
+    usersTableBody.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-role-toggle');
+      if (!btn) return;
+      handleRoleToggle(btn.dataset.userId, btn.dataset.nextRole);
+    });
+  }
 }
 
 function showError(message) {

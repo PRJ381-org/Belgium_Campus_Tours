@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
-const ROLES = ['viewer', 'admin'];
+// 'master' is a top-tier role that manages who else is an admin. It is never
+// assignable through the API/UI - only via a direct database change (see
+// src/scripts/setRole.js) - so a compromised admin session can never mint one.
+const ROLES = ['viewer', 'admin', 'master'];
 
 /**
  * User schema for dashboard authentication and RBAC.

@@ -274,6 +274,13 @@ body {
   background: linear-gradient(135deg, #171b23, #10131a);
 }
 
+.gallery-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .gallery-controls {
   display: flex;
   align-items: center;
@@ -930,6 +937,19 @@ tbody tr:hover {
   background: rgba(79, 140, 255, 0.12);
   color: #4f8cff;
   border: 1px solid rgba(79, 140, 255, 0.3);
+}
+
+.role-master {
+  background: rgba(0, 229, 255, 0.12);
+  color: var(--neon, #00e5ff);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  box-shadow: 0 0 6px rgba(0, 229, 255, 0.25);
+}
+
+.action-note {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-style: italic;
 }
 
 /* Login Page */

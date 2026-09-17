@@ -2,7 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 const rateLimit = require('express-rate-limit');
 const validate = require('../utils/validate');
-const { login, microsoftLogin, me, listUsers } = require('../controllers/auth.controller');
+const { login, microsoftLogin, me, listUsers, updateUserRole } = require('../controllers/auth.controller');
 const { requireAuth, requireRole } = require('../middlewares/auth.middleware');
 const requireDb = require('../middlewares/requireDb');
 
@@ -49,7 +49,18 @@ router.post(
 // already-signed-in user can still confirm their session during an outage.
 router.get('/me', requireAuth, me);
 
-// GET /api/auth/users -> list registered users and roles (admin only)
-router.get('/users', requireAuth, requireRole(['admin']), requireDb, listUsers);
+// GET /api/auth/users -> list registered users and roles (admin/master)
+router.get('/users', requireAuth, requireRole(['admin', 'master']), requireDb, listUsers);
+
+// PATCH /api/auth/users/:id/role -> promote/demote a user (master only - see updateUserRole)
+router.patch(
+  '/users/:id/role',
+  requireAuth,
+  requireRole(['master']),
+  [body('role').isIn(['viewer', 'admin']).withMessage("Role must be 'viewer' or 'admin'")],
+  validate,
+  requireDb,
+  updateUserRole
+);
 
 module.exports = router;

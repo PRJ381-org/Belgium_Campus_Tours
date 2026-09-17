@@ -6,6 +6,6 @@ const router = express.Router();
 
 // Deliberately NOT behind requireDb: feedback is read from Google Sheets, not
 // MongoDB, so this panel keeps working during a database outage.
-router.get('/', requireAuth, requireRole(['admin']), listFeedback);
+router.get('/', requireAuth, requireRole(['admin', 'master']), listFeedback);
 
 module.exports = router;

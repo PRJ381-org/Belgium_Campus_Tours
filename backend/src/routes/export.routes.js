@@ -13,12 +13,12 @@ const router = express.Router();
 // must still be answered 401/403, not told about our database state.
 
 // GET /api/export/summary (Admin only)
-router.get('/summary', requireAuth, requireRole(['admin']), requireDb, exportSummaryCsv);
+router.get('/summary', requireAuth, requireRole(['admin', 'master']), requireDb, exportSummaryCsv);
 
 // GET /api/export/leads (Admin only)
-router.get('/leads', requireAuth, requireRole(['admin']), requireDb, exportLeadsCsv);
+router.get('/leads', requireAuth, requireRole(['admin', 'master']), requireDb, exportLeadsCsv);
 
 // GET /api/export/analytics (Admin only)
-router.get('/analytics', requireAuth, requireRole(['admin']), requireDb, exportAnalyticsCsv);
+router.get('/analytics', requireAuth, requireRole(['admin', 'master']), requireDb, exportAnalyticsCsv);
 
 module.exports = router;

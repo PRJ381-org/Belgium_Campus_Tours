@@ -90,3 +90,31 @@ exports.listUsers = asyncHandler(async (req, res) => {
     users,
   });
 });
+
+/**
+ * PATCH /api/auth/users/:id/role
+ * Promotes or demotes a user between 'viewer' and 'admin' (master only).
+ * 'master' itself is never settable here - see the route's validator.
+ */
+exports.updateUserRole = asyncHandler(async (req, res) => {
+  const { role } = req.body;
+  if (!['viewer', 'admin'].includes(role)) {
+    return res.status(400).json({ success: false, message: "Role must be 'viewer' or 'admin'" });
+  }
+
+  const target = await User.findById(req.params.id);
+  if (!target) {
+    return res.status(404).json({ success: false, message: 'User not found' });
+  }
+
+  if (target.role === 'master') {
+    return res.status(400).json({ success: false, message: 'Master accounts cannot be changed here.' });
+  }
+
+  const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true }).select('-password');
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'User not found' });
+  }
+
+  res.json({ success: true, user });
+});

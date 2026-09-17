@@ -14,7 +14,12 @@ export function isAuthenticated() {
 }
 
 export function isAdmin() {
-  return currentUser && currentUser.role === 'admin';
+  return currentUser && (currentUser.role === 'admin' || currentUser.role === 'master');
+}
+
+// Only a master can promote/demote other users' admin access.
+export function isMaster() {
+  return currentUser && currentUser.role === 'master';
 }
 
 /**
