@@ -1,0 +1,218 @@
+/*
+ * Shared design tokens and base styles for the dashboard and login pages
+ * (Gradient Able inspired). Colours switch on <html data-theme="light|dark">,
+ * set by lib/theme.js. The landing page still uses global.css.
+ */
+
+:root,
+:root[data-theme='light'] {
+  --bg: #f4f7fa;
+  --card: #ffffff;
+  --text: #37474f;
+  --text-strong: #263238;
+  --muted: #8996a4;
+  --border: #eaeef2;
+  --hover: rgba(64, 153, 255, 0.07);
+  --chip-bg: #f1f4f8;
+  --chip-active: #ffffff;
+  --shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
+  --shadow-lg: 0 10px 40px rgba(69, 90, 100, 0.18);
+  --nav-bg: #3f4d67;
+  --nav-text: #a9b7d0;
+  --nav-active-bg: rgba(255, 255, 255, 0.06);
+  --nav-caption: #8a9bb8;
+  --overlay: rgba(38, 50, 56, 0.45);
+  --danger-bg: #fdecef;
+  --danger-text: #c62f4a;
+  --success-bg: #e6f8f3;
+  --success-text: #1b9e80;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #151b26;
+  --card: #1e2533;
+  --text: #cfd6e1;
+  --text-strong: #f1f4f8;
+  --muted: #8f9bb0;
+  --border: #2b3445;
+  --hover: rgba(64, 153, 255, 0.12);
+  --chip-bg: #262f3f;
+  --chip-active: #34405a;
+  --shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --nav-bg: #1a2130;
+  --nav-text: #8f9bb0;
+  --nav-active-bg: rgba(255, 255, 255, 0.05);
+  --nav-caption: #6b778c;
+  --overlay: rgba(0, 0, 0, 0.55);
+  --danger-bg: rgba(255, 83, 112, 0.14);
+  --danger-text: #ff8fa3;
+  --success-bg: rgba(46, 216, 182, 0.14);
+  --success-text: #59e0c5;
+  color-scheme: dark;
+}
+
+:root {
+  --blue: #4099ff;
+  --green: #2ed8b6;
+  --yellow: #ffb64d;
+  --red: #ff5370;
+  --purple: #7759de;
+  --grad-blue: linear-gradient(45deg, #4099ff, #73b4ff);
+  --grad-green: linear-gradient(45deg, #2ed8b6, #59e0c5);
+  --grad-yellow: linear-gradient(45deg, #ffb64d, #ffcb80);
+  --grad-red: linear-gradient(45deg, #ff5370, #ff869a);
+  --grad-purple: linear-gradient(45deg, #7759de, #a389f4);
+  --sidebar-width: 264px;
+  --sidebar-collapsed: 80px;
+  --header-height: 70px;
+  --radius: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+button {
+  font-family: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: var(--text-strong);
+  margin: 0;
+}
+
+/* ---------- Buttons & chips ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-size: 0.84rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--grad-blue);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(64, 153, 255, 0.35);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 6px 18px rgba(64, 153, 255, 0.5);
+}
+
+.btn-light {
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--border);
+  box-shadow: var(--shadow);
+}
+
+.btn-light:hover:not(:disabled) {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+
+.btn-danger-light {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+}
+
+.btn-sm {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.76rem;
+}
+
+.btn-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--radius);
+  background: var(--chip-bg);
+}
+
+.btn-chip {
+  padding: 0.38rem 0.75rem;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.btn-chip:hover {
+  color: var(--text-strong);
+}
+
+.btn-chip.active {
+  background: var(--chip-active);
+  color: var(--blue);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.spin {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Alerts ---------- */
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.1rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+  font-size: 0.86rem;
+}
+
+.alert-danger {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+}
+
+.alert-success {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+

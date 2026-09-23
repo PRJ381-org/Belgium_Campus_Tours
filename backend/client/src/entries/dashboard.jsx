@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client';
 import '@fontsource/poppins/latin-400.css';
 import '@fontsource/poppins/latin-500.css';
 import '@fontsource/poppins/latin-600.css';
+import '../styles/base.css';
 import '../styles/dashboard.css';
 import { isAuthenticated } from '../lib/auth.js';
 import { applyTheme } from '../lib/theme.js';
