@@ -31,6 +31,9 @@ const AUTHENTICATED_ROUTES = [
   ['get', '/api/analytics/events'],
   ['get', '/api/analytics/summary'],
   ['get', '/api/auth/me'],
+  ['get', '/api/auth/me/avatar'],
+  ['put', '/api/auth/me/avatar'],
+  ['delete', '/api/auth/me/avatar'],
 ];
 
 const ADMIN_ONLY_ROUTES = [

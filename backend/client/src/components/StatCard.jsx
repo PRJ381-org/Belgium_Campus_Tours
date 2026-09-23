@@ -1,15 +1,17 @@
+import Icon from './Icon.jsx';
+
 /**
- * One KPI tile in the dashboard stats row.
+ * Gradient KPI card (title, icon, big value, footer note).
  */
-export default function StatCard({ label, value, subtext, color, icon }) {
+export default function StatCard({ title, value, footer, color, icon }) {
   return (
-    <div className="card">
-      <div className="card-header">
-        <span className="card-label">{label}</span>
-        <div className={`card-icon card-icon-${color}`}>{icon}</div>
+    <div className={`stat-card ${color}`}>
+      <div className="stat-title">{title}</div>
+      <div className="stat-row">
+        <Icon name={icon} size={28} />
+        <span className="stat-value">{value}</span>
       </div>
-      <span className="card-value">{value}</span>
-      <span className="card-subtext">{subtext}</span>
+      <div className="stat-footer">{footer}</div>
     </div>
   );
 }

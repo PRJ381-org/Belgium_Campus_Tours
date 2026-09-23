@@ -2,7 +2,16 @@ const express = require('express');
 const { body } = require('express-validator');
 const rateLimit = require('express-rate-limit');
 const validate = require('../utils/validate');
-const { login, microsoftLogin, me, listUsers, updateUserRole } = require('../controllers/auth.controller');
+const {
+  login,
+  microsoftLogin,
+  me,
+  getMyAvatar,
+  setMyAvatar,
+  deleteMyAvatar,
+  listUsers,
+  updateUserRole,
+} = require('../controllers/auth.controller');
 const { requireAuth, requireRole } = require('../middlewares/auth.middleware');
 const requireDb = require('../middlewares/requireDb');
 
@@ -48,6 +57,30 @@ router.post(
 // No requireDb: this echoes the verified JWT and never reads the database, so an
 // already-signed-in user can still confirm their session during an outage.
 router.get('/me', requireAuth, me);
+
+// Profile picture for the signed-in user (any role). Stored as a data URL; the
+// dashboard shrinks images to 256px first, so ~90k chars is plenty and keeps
+// the body under express.json's 100kb limit.
+const AVATAR_MAX_LENGTH = 90000;
+const AVATAR_DATA_URL = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+=*$/;
+
+router.get('/me/avatar', requireAuth, requireDb, getMyAvatar);
+router.put(
+  '/me/avatar',
+  requireAuth,
+  [
+    body('avatar')
+      .isString()
+      .isLength({ max: AVATAR_MAX_LENGTH })
+      .withMessage('Image is too large')
+      .matches(AVATAR_DATA_URL)
+      .withMessage('Avatar must be a PNG, JPEG or WebP image'),
+  ],
+  validate,
+  requireDb,
+  setMyAvatar
+);
+router.delete('/me/avatar', requireAuth, requireDb, deleteMyAvatar);
 
 // GET /api/auth/users -> list registered users and roles (admin/master)
 router.get('/users', requireAuth, requireRole(['admin', 'master']), requireDb, listUsers);
