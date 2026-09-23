@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import BtnGroup from './BtnGroup.jsx';
-import { ROLE_BADGE_CLASS } from './Topbar.jsx';
+import Avatar from './Avatar.jsx';
+import { ROLE_BADGE_CLASS } from './ProfileMenu.jsx';
 
 const FILTERS = [
   { value: 'all', label: 'All' },
@@ -9,7 +10,7 @@ const FILTERS = [
 ];
 
 const SORTS = [
-  { value: 'newest', label: 'Newest ⬇' },
+  { value: 'newest', label: 'Newest' },
   { value: 'name', label: 'Name A-Z' },
 ];
 
@@ -23,10 +24,13 @@ function RoleAction({ user, currentUserId, canManageRoles, onToggleRole }) {
   if (user._id === currentUserId) return <span className="action-note">This is you</span>;
   if (!canManageRoles) return <span className="action-note">—</span>;
 
-  const nextRole = user.role === 'admin' ? 'viewer' : 'admin';
+  const makeAdmin = user.role !== 'admin';
   return (
-    <button className="btn-chip btn-role-toggle" onClick={() => onToggleRole(user._id, nextRole)}>
-      {user.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
+    <button
+      className={`btn btn-sm ${makeAdmin ? 'btn-primary' : 'btn-danger-light'}`}
+      onClick={() => onToggleRole(user._id, makeAdmin ? 'admin' : 'viewer')}
+    >
+      {makeAdmin ? 'Make Admin' : 'Remove Admin'}
     </button>
   );
 }
@@ -44,59 +48,63 @@ export default function UsersPanel({ users, currentUserId, canManageRoles, onTog
   }, [users, filter, sort]);
 
   return (
-    <section className="panel users-panel">
-      <div className="panel-header">
-        <h2>Registered Users & Access Roles</h2>
-        <div className="quick-actions">
-          <div className="action-group">
-            <span className="action-label">Role:</span>
-            <BtnGroup options={FILTERS} value={filter} onChange={setFilter} />
-          </div>
-          <div className="action-group">
-            <span className="action-label">Sort:</span>
-            <BtnGroup options={SORTS} value={sort} onChange={setSort} />
-          </div>
+    <section className="card">
+      <div className="card-header">
+        <div>
+          <h2>Registered Users & Access Roles</h2>
+          <p>{users.length} {users.length === 1 ? 'account' : 'accounts'} with dashboard access</p>
+        </div>
+        <div className="card-actions">
+          <span className="label">Role</span>
+          <BtnGroup options={FILTERS} value={filter} onChange={setFilter} />
+          <span className="label">Sort</span>
+          <BtnGroup options={SORTS} value={sort} onChange={setSort} />
         </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>User / Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Date Added</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {visible.length === 0 ? (
+      <div className="table-wrap">
+        <table>
+          <thead>
             <tr>
-              <td colSpan={5}>No registered users found.</td>
+              <th>User</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Date Added</th>
+              <th>Actions</th>
             </tr>
-          ) : (
-            visible.map((user) => (
-              <tr key={user._id}>
-                <td><strong>{user.name || 'Campus Member'}</strong></td>
-                <td>{user.email}</td>
-                <td>
-                  <span className={`role-badge ${ROLE_BADGE_CLASS[user.role] || 'role-viewer'}`}>
-                    {user.role || 'viewer'}
-                  </span>
-                </td>
-                <td>{new Date(user.createdAt).toLocaleDateString()}</td>
-                <td>
-                  <RoleAction
-                    user={user}
-                    currentUserId={currentUserId}
-                    canManageRoles={canManageRoles}
-                    onToggleRole={onToggleRole}
-                  />
-                </td>
+          </thead>
+          <tbody>
+            {visible.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="empty">No users match this filter.</td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              visible.map((user) => (
+                <tr key={user._id}>
+                  <td>
+                    <div className="cell-user">
+                      <Avatar user={user} size={32} />
+                      {user.name || 'Campus Member'}
+                    </div>
+                  </td>
+                  <td className="cell-muted">{user.email}</td>
+                  <td>
+                    <span className={`badge ${ROLE_BADGE_CLASS[user.role] || 'badge-viewer'}`}>{user.role || 'viewer'}</span>
+                  </td>
+                  <td className="cell-muted">{new Date(user.createdAt).toLocaleDateString()}</td>
+                  <td>
+                    <RoleAction
+                      user={user}
+                      currentUserId={currentUserId}
+                      canManageRoles={canManageRoles}
+                      onToggleRole={onToggleRole}
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }

@@ -79,6 +79,43 @@ exports.me = asyncHandler(async (req, res) => {
 });
 
 /**
+ * GET /api/auth/me/avatar
+ * Returns the signed-in user's profile picture ('' when none is set).
+ */
+exports.getMyAvatar = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id).select('+avatar');
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'User not found' });
+  }
+  res.json({ success: true, avatar: user.avatar || '' });
+});
+
+/**
+ * PUT /api/auth/me/avatar
+ * Sets the signed-in user's profile picture. The route validator guarantees a
+ * small base64 PNG/JPEG/WebP data URL.
+ */
+exports.setMyAvatar = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.user.id, { avatar: req.body.avatar }, { new: true }).select('+avatar');
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'User not found' });
+  }
+  res.json({ success: true, avatar: user.avatar });
+});
+
+/**
+ * DELETE /api/auth/me/avatar
+ * Removes the signed-in user's profile picture.
+ */
+exports.deleteMyAvatar = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.user.id, { avatar: '' });
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'User not found' });
+  }
+  res.json({ success: true, avatar: '' });
+});
+
+/**
  * GET /api/auth/users
  * Returns list of registered dashboard users from MongoDB (excluding password hashes).
  */

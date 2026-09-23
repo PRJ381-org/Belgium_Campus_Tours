@@ -37,6 +37,14 @@ const userSchema = new mongoose.Schema(
       enum: ['local', 'microsoft'],
       default: 'local',
     },
+    // Profile picture as a small data URL (the dashboard resizes it to 256px
+    // before upload). Excluded by default so user lists stay lightweight -
+    // fetch it with .select('+avatar') or GET /api/auth/me/avatar.
+    avatar: {
+      type: String,
+      default: '',
+      select: false,
+    },
   },
   { timestamps: true }
 );

@@ -1,37 +1,38 @@
-/**
- * Dashboard sidebar navigation (Home / ...). Pure UI state - the parent decides
- * which page is shown.
- */
-const PAGES = [
-  {
-    id: 'home',
-    label: 'Home',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" />
-      </svg>
-    ),
-  },
-];
+import Icon from './Icon.jsx';
 
-export default function Sidebar({ page, onNavigate }) {
+/**
+ * Dashboard sidebar navigation. Collapses to icons on desktop and slides in
+ * as an overlay on mobile (both controlled by the parent via .app classes).
+ */
+export default function Sidebar({ sections, page, onNavigate }) {
   return (
-    <nav className="sidebar">
+    <nav className="sidebar" aria-label="Dashboard navigation">
       <div className="sidebar-brand">
-        <img src="assets/logo.png" alt="Belgium Campus" className="sidebar-logo" />
+        <img src="assets/logo.png" alt="Belgium Campus" />
+        <span className="sidebar-brand-text">
+          <strong>Virtual Campus Open Day</strong>
+          <small>VR Analytics & Telemetry</small>
+        </span>
       </div>
       <div className="sidebar-nav">
-        {PAGES.map((p) => (
-          <button
-            key={p.id}
-            className={`sidebar-link${page === p.id ? ' active' : ''}`}
-            onClick={() => onNavigate(p.id)}
-          >
-            {p.icon}
-            <span className="sidebar-label">{p.label}</span>
-            <span className="sidebar-glow" />
-          </button>
+        {sections.map((section) => (
+          <div key={section.caption}>
+            <div className="nav-caption">{section.caption}</div>
+            {section.items.map((item) => (
+              <button
+                key={item.id}
+                className={`nav-link${page === item.id ? ' active' : ''}`}
+                onClick={() => onNavigate(item.id)}
+                title={item.label}
+                aria-current={page === item.id ? 'page' : undefined}
+              >
+                <span className="nav-icon">
+                  <Icon name={item.icon} size={16} />
+                </span>
+                <span className="nav-label">{item.label}</span>
+              </button>
+            ))}
+          </div>
         ))}
       </div>
     </nav>
