@@ -104,7 +104,7 @@ export default function Login() {
           </div>
 
           <h1 className="auth-title">Sign in</h1>
-          <p className="auth-subtitle">Welcome back! Sign in to open the admin dashboard.</p>
+          <p className="auth-subtitle">Welcome back! Sign in to open the dashboard.</p>
 
           {error && (
             <div className="alert alert-danger" role="alert">
