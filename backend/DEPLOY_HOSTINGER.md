@@ -66,11 +66,16 @@ prj381/
     index.js
     app.js
     ...
-  public/          <- the dashboard
+  public/          <- the dashboard (built React site)
     index.html
     login.html
-    ...
+    dashboard.html
+    assets/        <- images
+    static/        <- bundled JS/CSS
 ```
+
+There is no `client/` folder on the server. `client/` is the React source code;
+it is built into `public/` before shipping and is never uploaded.
 
 If you instead see `prj381/prj381-backend/package.json`, the zip was extracted
 one level too deep. Move the contents up a level.
@@ -273,9 +278,14 @@ From the `backend/` folder of the repository:
 
 ```bash
 npm install          # once
+npm run build:client # rebuilds public/ from the React source in client/
 npm test             # should pass before you ship anything
 npm run package      # writes dist/prj381-backend.zip
 ```
+
+`public/` is committed already built, so if you only changed backend code you
+can skip `build:client`. Never edit files in `public/` by hand — they are
+overwritten on the next build. Edit `client/` instead.
 
 The build refuses to produce a zip containing a `.env` file, and checks that
 `package.json`, `src/index.js` and `public/index.html` are where Passenger and

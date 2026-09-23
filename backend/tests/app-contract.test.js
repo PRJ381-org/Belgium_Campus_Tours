@@ -71,19 +71,37 @@ describe('dashboard is served by the same app as the API', () => {
     expect(res.status).toBe(200);
   });
 
+  // public/ is the Vite build of client/, so bundle names are hashed - follow
+  // the <script>/<link> tags in each page instead of hard-coding paths.
+  async function pageAssets(page) {
+    const res = await request(app).get(page);
+    return [...res.text.matchAll(/(?:src|href)="\.?\/?(static\/[^"]+)"/g)].map((m) => `/${m[1]}`);
+  }
+
   test('static assets resolve', async () => {
-    const css = await request(app).get('/css/style.css');
+    const assets = await pageAssets('/');
+    const cssPath = assets.find((a) => a.endsWith('.css'));
+    expect(cssPath).toBeDefined();
+    const css = await request(app).get(cssPath);
     expect(css.status).toBe(200);
     expect(css.headers['content-type']).toMatch(/css/);
+
+    const logo = await request(app).get('/assets/logo.png');
+    expect(logo.status).toBe(200);
   });
 
-  test('js/api.js uses a relative API base, so the build is host-portable', async () => {
+  test('bundled JS calls the API with relative URLs, so the build is host-portable', async () => {
     // A hard-coded host here is what would break the move to Hostinger.
-    const res = await request(app).get('/js/api.js');
-    expect(res.status).toBe(200);
-    expect(res.text).toMatch(/API_BASE_URL\s*=\s*['"]{2}/);
-    expect(res.text).not.toMatch(/https?:\/\/localhost/);
-    expect(res.text).not.toMatch(/azurewebsites\.net/);
+    const pages = ['/', '/login.html', '/dashboard.html'];
+    const scripts = new Set((await Promise.all(pages.map(pageAssets))).flat().filter((a) => a.endsWith('.js')));
+    expect(scripts.size).toBeGreaterThan(0);
+
+    for (const script of scripts) {
+      const res = await request(app).get(script);
+      expect(res.status).toBe(200);
+      expect(res.text).not.toMatch(/https?:\/\/localhost/);
+      expect(res.text).not.toMatch(/azurewebsites\.net/);
+    }
   });
 
   test('old /dashboard links still redirect to /', async () => {

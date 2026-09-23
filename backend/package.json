@@ -7,7 +7,9 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "jest --runInBand",
-    "package": "node scripts/package.js"
+    "package": "node scripts/package.js",
+    "dev:client": "npm --prefix client run dev",
+    "build:client": "npm --prefix client ci && npm --prefix client run build"
   },
   "engines": {
     "node": ">=20"
