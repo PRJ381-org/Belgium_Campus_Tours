@@ -54,8 +54,7 @@ export default function Nav() {
         </nav>
 
         <div className="nav-actions">
-          <a href="login.html" className="pill pill-ghost">Login</a>
-          <a href="#download" className="pill pill-white" onClick={() => setOpen(false)}>Download</a>
+          <a href="login.html" className="pill pill-white">Login</a>
           <button
             className="nav-toggle"
             onClick={() => setOpen((o) => !o)}

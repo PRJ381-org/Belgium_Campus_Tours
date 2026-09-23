@@ -92,6 +92,37 @@ main,
   }
 }
 
+/* ---------- Cursor comet trail (see CursorTrail.jsx) ---------- */
+.cursor-trail {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cursor-trail.on {
+  opacity: 1;
+}
+
+/* Dots shrink and fade along the tail; the front half is blue, the back half purple. */
+.cursor-trail span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(8px - var(--i) * 0.5px);
+  height: calc(8px - var(--i) * 0.5px);
+  margin: calc((8px - var(--i) * 0.5px) / -2) 0 0 calc((8px - var(--i) * 0.5px) / -2);
+  border-radius: 50%;
+  background: #4099ff;
+  opacity: calc(1 - var(--i) / var(--n));
+}
+
+.cursor-trail span:nth-child(n + 7) {
+  background: #a389f4;
+}
+
 /* ---------- Pills (buttons) ---------- */
 .pill {
   display: inline-flex;
@@ -144,18 +175,21 @@ main,
   left: 0;
   right: 0;
   z-index: 50;
-  padding: 0 16px;
+  padding: 0 20px;
 }
 
+/* Three columns (logo | links | login) with equal outer columns, so the
+   links sit dead centre whatever width the logo and button are. Same width
+   as the hero frame so their edges line up. */
 .nav-inner {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 10px 10px 10px 18px;
+  padding: 10px 14px;
   border: 1px solid transparent;
   border-radius: 999px;
   transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
@@ -218,6 +252,7 @@ main,
 .nav-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.5rem;
 }
 
@@ -1075,7 +1110,18 @@ p.reveal {
 }
 
 /* ---------- Responsive ---------- */
+/* Medium widths: logo only, so the centred links never touch the brand text. */
+@media (max-width: 1150px) and (min-width: 1001px) {
+  .nav-brand span {
+    display: none;
+  }
+}
+
 @media (max-width: 1000px) {
+  .nav-inner {
+    grid-template-columns: 1fr auto;
+  }
+
   .nav-links {
     display: none;
   }
@@ -1194,8 +1240,7 @@ p.reveal {
 }
 
 @media (max-width: 600px) {
-  .nav-brand span,
-  .nav-actions .pill-white {
+  .nav-brand span {
     display: none;
   }
 
