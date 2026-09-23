@@ -1,7 +1,7 @@
 /*
  * Shared design tokens and base styles for the dashboard and login pages
  * (Gradient Able inspired). Colours switch on <html data-theme="light|dark">,
- * set by lib/theme.js. The landing page still uses global.css.
+ * set by lib/theme.js. The landing page has its own landing.css.
  */
 
 :root,
