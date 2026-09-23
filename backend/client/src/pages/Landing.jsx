@@ -8,6 +8,7 @@ import GalleryScroll from '../components/landing/GalleryScroll.jsx';
 import Team from '../components/landing/Team.jsx';
 import Downloads from '../components/landing/Downloads.jsx';
 import Footer from '../components/landing/Footer.jsx';
+import CursorTrail from '../components/landing/CursorTrail.jsx';
 
 /**
  * Public landing page - one long scrolling page with section anchors.
@@ -27,6 +28,7 @@ export default function Landing() {
         <Downloads />
       </main>
       <Footer />
+      <CursorTrail />
     </>
   );
 }
