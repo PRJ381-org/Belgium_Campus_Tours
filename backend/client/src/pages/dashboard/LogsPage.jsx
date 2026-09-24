@@ -2,6 +2,7 @@ import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import BtnGroup from '../../components/BtnGroup.jsx';
 import Icon from '../../components/Icon.jsx';
 import { fetchJson } from '../../lib/api.js';
+import useAutoRefresh from '../../lib/useAutoRefresh.js';
 
 const TIMEFRAMES = [
   { value: 'all', label: 'All Time' },
@@ -106,6 +107,9 @@ export default function LogsPage() {
     }, LIVE_INTERVAL_MS);
     return () => clearInterval(timer);
   }, [live, load]);
+
+  // Outside live mode, still refresh quietly every minute.
+  useAutoRefresh(() => load({ quiet: true }), 60000, !live);
 
   // Only offer type chips for types that actually appear, plus "All".
   const typeOptions = useMemo(() => {

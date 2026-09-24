@@ -11,6 +11,8 @@ const leadsRoutes = require('./routes/leads.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const exportRoutes = require('./routes/export.routes');
 const feedbackRoutes = require('./routes/feedback.routes');
+const ticketRoutes = require('./routes/tickets.routes');
+const statusRoutes = require('./routes/status.routes');
 const downloadRoutes = require('./routes/download.routes');
 const downloadBuildRoutes = require('./routes/downloadBuildRoutes');
 const notFound = require('./utils/notFound');
@@ -60,6 +62,8 @@ app.use('/api/leads', leadsRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/export', exportRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/tickets', ticketRoutes);
+app.use('/api/status', statusRoutes);
 app.use('/api/downloads', downloadRoutes);
 app.use('/api/download', downloadBuildRoutes);
 

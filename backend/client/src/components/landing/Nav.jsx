@@ -8,6 +8,7 @@ export const NAV_LINKS = [
   { id: 'gallery', label: 'Gallery' },
   { id: 'team', label: 'Team' },
   { id: 'download', label: 'Download' },
+  { id: 'feedback', label: 'Feedback' },
 ];
 
 /**

@@ -32,7 +32,7 @@ export default function LeadsPanel({ leads, isAdmin }) {
         <div className="card-actions">
           <BtnGroup options={SORTS} value={sort} onChange={setSort} />
           {isAdmin && (
-            <button className="btn btn-light btn-sm" title="Export leads to CSV" onClick={downloadLeadsCsv}>
+            <button className="btn btn-light btn-sm" title="Export leads to CSV" onClick={() => downloadLeadsCsv()}>
               <Icon name="download" size={13} />
               CSV
             </button>
