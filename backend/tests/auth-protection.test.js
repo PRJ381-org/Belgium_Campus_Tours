@@ -42,6 +42,14 @@ const ADMIN_ONLY_ROUTES = [
   ['get', '/api/export/leads'],
   ['get', '/api/export/analytics'],
   ['get', '/api/feedback'],
+  ['get', '/api/export/feedback'],
+  ['get', '/api/export/tickets'],
+  ['get', '/api/export/counts'],
+  ['get', '/api/tickets'],
+  ['get', '/api/tickets/stats'],
+  ['post', '/api/tickets/VC-ABC234/reply'],
+  ['patch', '/api/tickets/VC-ABC234/status'],
+  ['get', '/api/status'],
 ];
 
 const ALL_PROTECTED = [...AUTHENTICATED_ROUTES, ...ADMIN_ONLY_ROUTES];
@@ -104,6 +112,9 @@ describe('public ingest routes stay open to the headset', () => {
     ['/api/analytics/events', { sessionId: 's', eventType: 'session_start' }],
     ['/api/analytics/batch', { events: [{ sessionId: 's', eventType: 'session_start' }] }],
     ['/api/leads', { email: 'someone@example.com' }],
+    ['/api/feedback', { rating: 5, name: 'Ann', email: 'ann@example.com' }],
+    ['/api/tickets', { name: 'Ann', email: 'ann@example.com', category: 'other', subject: 's', message: 'm' }],
+    ['/api/tickets/mine', { tickets: [] }],
   ];
 
   test.each(PUBLIC_POSTS)('POST %s is not rejected as unauthenticated', async (path, payload) => {

@@ -2,8 +2,8 @@
  * Profile pictures against a real MongoDB.
  *
  * Users can only ever read or change their OWN avatar (the id comes from the
- * JWT, never the request), and the avatar stays out of user lists so the admin
- * table doesn't download every picture.
+ * JWT, never the request). The admin user list includes avatars so the Users
+ * table can show them.
  */
 const request = require('supertest');
 const app = require('../src/app');
@@ -66,10 +66,13 @@ describeDb('profile picture routes (database-backed)', () => {
     expect(res.status).toBe(400);
   });
 
-  test('user list does not include avatars', async () => {
+  test('admin user list includes avatars (and never password hashes)', async () => {
     await auth(request(app).put('/api/auth/me/avatar')).send({ avatar: TINY_PNG });
     const res = await auth(request(app).get('/api/auth/users'));
     expect(res.status).toBe(200);
-    expect(res.body.users.every((u) => u.avatar === undefined)).toBe(true);
+    const byEmail = Object.fromEntries(res.body.users.map((u) => [u.email, u]));
+    expect(byEmail['alice@bc.ac.za'].avatar).toBe(TINY_PNG);
+    expect(byEmail['bob@bc.ac.za'].avatar).toBe('');
+    expect(res.body.users.every((u) => u.password === undefined)).toBe(true);
   });
 });

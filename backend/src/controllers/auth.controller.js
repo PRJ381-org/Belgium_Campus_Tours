@@ -117,10 +117,12 @@ exports.deleteMyAvatar = asyncHandler(async (req, res) => {
 
 /**
  * GET /api/auth/users
- * Returns list of registered dashboard users from MongoDB (excluding password hashes).
+ * Returns list of registered dashboard users from MongoDB (excluding password
+ * hashes), including profile pictures so the admin Users table can show them.
+ * Avatars are small (256px, under ~90k chars each) and this is admin-only.
  */
 exports.listUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({}, '-password').sort({ createdAt: -1 });
+  const users = await User.find().select('-password +avatar').sort({ createdAt: -1 });
   res.json({
     success: true,
     count: users.length,

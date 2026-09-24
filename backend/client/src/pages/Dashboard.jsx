@@ -3,6 +3,7 @@ import { fetchJson } from '../lib/api.js';
 import { restoreSession, isAdmin as checkIsAdmin, isMaster, logout } from '../lib/auth.js';
 import { fetchAvatar } from '../lib/avatar.js';
 import { useTheme } from '../lib/theme.js';
+import useAutoRefresh, { useTitleCount } from '../lib/useAutoRefresh.js';
 import Sidebar from '../components/Sidebar.jsx';
 import Header from '../components/Header.jsx';
 import Icon from '../components/Icon.jsx';
@@ -10,6 +11,10 @@ import Overview from './dashboard/Overview.jsx';
 import UsersPage from './dashboard/UsersPage.jsx';
 import Settings from './dashboard/Settings.jsx';
 import LogsPage from './dashboard/LogsPage.jsx';
+import FeedbackPage from './dashboard/FeedbackPage.jsx';
+import TicketsPage from './dashboard/TicketsPage.jsx';
+import SystemStatusPage from './dashboard/SystemStatusPage.jsx';
+import ReportsPage from './dashboard/ReportsPage.jsx';
 
 const MOBILE_QUERY = '(max-width: 991px)';
 
@@ -17,7 +22,7 @@ const MOBILE_QUERY = '(max-width: 991px)';
 // browser back button keep you where you were.
 function pageFromHash() {
   const page = window.location.hash.replace('#', '');
-  return ['logs', 'users', 'settings'].includes(page) ? page : 'overview';
+  return ['logs', 'tickets', 'feedback', 'reports', 'users', 'status', 'settings'].includes(page) ? page : 'overview';
 }
 
 export default function Dashboard() {
@@ -86,6 +91,9 @@ export default function Dashboard() {
     if (user) loadDashboard();
   }, [user, loadDashboard]);
 
+  // Keep stats, charts, leads and users fresh without a manual refresh.
+  useAutoRefresh(() => user && loadDashboard(), 60000);
+
   const handleRefresh = () => {
     setRefreshing(true);
     loadDashboard().finally(() => setTimeout(() => setRefreshing(false), 300));
@@ -104,8 +112,35 @@ export default function Dashboard() {
     }
   };
 
+  // Keep your own row in the Users table in sync when you change your photo.
+  const handleAvatarChange = (next) => {
+    setAvatar(next);
+    setUsers((list) => list.map((u) => (u._id === user?.id ? { ...u, avatar: next } : u)));
+  };
+
   const isAdmin = Boolean(user && checkIsAdmin());
-  const currentPage = page === 'users' && !isAdmin ? 'overview' : page;
+
+  // Sidebar badge: support tickets waiting on a staff reply (admins only).
+  const [ticketsNeedingReply, setTicketsNeedingReply] = useState(0);
+  const loadTicketStats = useCallback(async () => {
+    try {
+      const res = await fetchJson('/api/tickets/stats');
+      setTicketsNeedingReply(res.needsReply || 0);
+    } catch {
+      // Badge is a nice-to-have; ignore failures.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAdmin) loadTicketStats();
+  }, [isAdmin, loadTicketStats]);
+
+  useAutoRefresh(() => isAdmin && loadTicketStats(), 60000);
+  // "(2) PRJ381 Dashboard" in the browser tab when tickets are waiting.
+  useTitleCount(isAdmin ? ticketsNeedingReply : 0);
+
+  const adminOnly = ['users', 'feedback', 'tickets', 'reports', 'status'];
+  const currentPage = adminOnly.includes(page) && !isAdmin ? 'overview' : page;
 
   const sections = [
     {
@@ -113,7 +148,15 @@ export default function Dashboard() {
       items: [
         { id: 'overview', label: 'Dashboard', icon: 'home' },
         { id: 'logs', label: 'Activity Logs', icon: 'list' },
-        ...(isAdmin ? [{ id: 'users', label: 'Users', icon: 'users' }] : []),
+        ...(isAdmin
+          ? [
+              { id: 'tickets', label: 'Tickets', icon: 'inbox', badge: ticketsNeedingReply },
+              { id: 'feedback', label: 'Feedback', icon: 'message' },
+              { id: 'reports', label: 'Reports', icon: 'download' },
+              { id: 'users', label: 'Users', icon: 'users' },
+              { id: 'status', label: 'System Status', icon: 'activity' },
+            ]
+          : []),
       ],
     },
     // Settings lives in the header profile menu, not here.
@@ -169,11 +212,19 @@ export default function Dashboard() {
 
           {currentPage === 'logs' && user && <LogsPage />}
 
+          {currentPage === 'tickets' && isAdmin && <TicketsPage onChanged={loadTicketStats} />}
+
+          {currentPage === 'feedback' && isAdmin && <FeedbackPage />}
+
+          {currentPage === 'status' && isAdmin && <SystemStatusPage onNavigate={navigate} />}
+
+          {currentPage === 'reports' && isAdmin && <ReportsPage />}
+
           {currentPage === 'settings' && user && (
             <Settings
               user={user}
               avatar={avatar}
-              onAvatarChange={setAvatar}
+              onAvatarChange={handleAvatarChange}
               themeChoice={themeChoice}
               onThemeChoice={setThemeChoice}
             />

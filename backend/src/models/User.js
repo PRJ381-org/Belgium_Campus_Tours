@@ -38,8 +38,9 @@ const userSchema = new mongoose.Schema(
       default: 'local',
     },
     // Profile picture as a small data URL (the dashboard resizes it to 256px
-    // before upload). Excluded by default so user lists stay lightweight -
-    // fetch it with .select('+avatar') or GET /api/auth/me/avatar.
+    // before upload). Excluded by default so ordinary queries stay lightweight -
+    // fetch it with .select('+avatar'), GET /api/auth/me/avatar, or the
+    // admin user list (GET /api/auth/users), which opts in.
     avatar: {
       type: String,
       default: '',

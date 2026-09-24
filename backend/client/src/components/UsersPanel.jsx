@@ -82,7 +82,7 @@ export default function UsersPanel({ users, currentUserId, canManageRoles, onTog
                 <tr key={user._id}>
                   <td>
                     <div className="cell-user">
-                      <Avatar user={user} size={32} />
+                      <Avatar user={user} src={user.avatar} size={32} />
                       {user.name || 'Campus Member'}
                     </div>
                   </td>
