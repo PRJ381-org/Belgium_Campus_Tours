@@ -122,19 +122,18 @@ hPanel → Node.js → your app → **Environment variables**. Add:
 Do **not** set `PORT`. Passenger assigns it and passes it in; overriding it stops
 the app being reachable.
 
-### Optional: Microsoft sign-in and the feedback panel
+### Optional: Microsoft sign-in
 
-These are only needed for features that can be switched on later. Leaving them
-unset is fine — the rest of the app works normally.
+Only needed for "Sign in with Microsoft". Leaving them unset is fine — the rest
+of the app works normally.
 
 | Name | Needed for |
 |---|---|
 | `MS_CLIENT_ID`, `MS_TENANT_ID` | "Sign in with Microsoft" on the dashboard |
-| `GOOGLE_SHEETS_CLIENT_EMAIL`, `GOOGLE_SHEETS_PRIVATE_KEY`, `GOOGLE_SHEETS_SPREADSHEET_ID` | the admin Feedback panel |
 
-If the Google ones are unset, the Feedback panel (admin view only) shows an error
-reading *"Google Sheets feedback integration is not configured yet"*. That is
-expected, not a broken deployment.
+The Open Day feedback form needs no extra settings: responses are stored in
+MongoDB alongside leads and analytics. (It used to read a Google Sheet, which
+needed Google service-account keys; that has been removed.)
 
 `CORS_ORIGIN` accepts a comma-separated list if you need more than one origin,
 e.g. `https://prj381.example.com,https://www.prj381.example.com`. It controls
@@ -226,9 +225,8 @@ This is what a database outage is supposed to look like. The app is up, the
 dashboard is served, and the endpoints that need MongoDB say so immediately
 instead of hanging. Fix the connection (above) and the 503s stop on their own.
 
-Not everything 503s: `/health`, the dashboard itself, `/api/auth/me` and the
-admin Feedback panel (which reads Google Sheets) keep working, because none of
-them touch MongoDB.
+Not everything 503s: `/health`, the dashboard itself and `/api/auth/me` keep
+working, because none of them touch MongoDB.
 
 **The dashboard loads but every panel shows an error**
 

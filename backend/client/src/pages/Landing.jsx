@@ -9,6 +9,8 @@ import Team from '../components/landing/Team.jsx';
 import Downloads from '../components/landing/Downloads.jsx';
 import Footer from '../components/landing/Footer.jsx';
 import CursorTrail from '../components/landing/CursorTrail.jsx';
+import FeedbackForm from '../components/landing/FeedbackForm.jsx';
+import SupportWidget from '../components/landing/SupportWidget.jsx';
 
 /**
  * Public landing page - one long scrolling page with section anchors.
@@ -26,8 +28,10 @@ export default function Landing() {
         <GalleryScroll />
         <Team />
         <Downloads />
+        <FeedbackForm />
       </main>
       <Footer />
+      <SupportWidget />
       <CursorTrail />
     </>
   );
