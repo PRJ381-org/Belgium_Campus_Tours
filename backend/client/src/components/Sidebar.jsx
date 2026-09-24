@@ -30,6 +30,7 @@ export default function Sidebar({ sections, page, onNavigate }) {
                   <Icon name={item.icon} size={16} />
                 </span>
                 <span className="nav-label">{item.label}</span>
+                {item.badge > 0 && <span className="nav-badge">{item.badge}</span>}
               </button>
             ))}
           </div>

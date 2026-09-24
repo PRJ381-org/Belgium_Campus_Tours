@@ -3,7 +3,6 @@ import BtnGroup from '../../components/BtnGroup.jsx';
 import StatCard from '../../components/StatCard.jsx';
 import ChartCanvas from '../../components/ChartCanvas.jsx';
 import LeadsPanel from '../../components/LeadsPanel.jsx';
-import ExportDropdown from '../../components/ExportDropdown.jsx';
 import Icon from '../../components/Icon.jsx';
 import { eventTypeChartConfig, areaChartConfig, hotspotChartConfig } from '../../lib/chartConfigs.js';
 
@@ -60,11 +59,10 @@ export default function Overview({ summary, leads, leadCount, timeframe, onTimef
         </div>
         <div className="toolbar">
           <BtnGroup options={TIMEFRAMES} value={timeframe} onChange={onTimeframe} />
-          <button className="btn btn-light" onClick={onRefresh} disabled={refreshing}>
+          <button className="btn btn-primary" onClick={onRefresh} disabled={refreshing}>
             <Icon name="refresh" size={15} className={refreshing ? 'spin' : ''} />
             Refresh
           </button>
-          {isAdmin && <ExportDropdown />}
         </div>
       </div>
 
