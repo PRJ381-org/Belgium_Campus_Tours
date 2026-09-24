@@ -18,9 +18,11 @@ export default function Orb({ scrollRef }) {
     (async () => {
       let THREE;
       let RoomEnvironment;
+      let mergeVertices;
       try {
         THREE = await import('three');
         ({ RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js'));
+        ({ mergeVertices } = await import('three/addons/utils/BufferGeometryUtils.js'));
       } catch {
         setFallback(true);
         return;
@@ -49,7 +51,15 @@ export default function Orb({ scrollRef }) {
       scene.environment = envTexture;
 
       // 96 segments looks smooth and keeps the per-frame morph cheap on phones.
-      const geometry = new THREE.SphereGeometry(1.6, 96, 96);
+      // A sphere duplicates the vertices along its UV seam and at the poles, so
+      // recomputed normals don't match there and a visible line appears. Drop
+      // the (unused) UVs and normals and weld those vertices together.
+      const sphere = new THREE.SphereGeometry(1.6, 96, 96);
+      sphere.deleteAttribute('uv');
+      sphere.deleteAttribute('normal');
+      const geometry = mergeVertices(sphere);
+      sphere.dispose();
+      geometry.computeVertexNormals();
       const base = geometry.attributes.position.array.slice();
       const material = new THREE.MeshPhysicalMaterial({
         color: 0x0c1220,
