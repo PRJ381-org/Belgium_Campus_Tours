@@ -6,6 +6,10 @@ import Icon from '../components/Icon.jsx';
 
 const msConfigured = Boolean(MS_CONFIG.clientId && MS_CONFIG.tenantId);
 
+// Email + password sign-in is hidden: staff use Microsoft only. The form and the
+// /api/auth/login endpoint are kept - flip this to true to bring it back.
+const SHOW_EMAIL_LOGIN = false;
+
 // Created once per page load (outside the component) so React re-renders can't
 // run MSAL's initialize/handleRedirectPromise twice.
 let msalReady = null;
@@ -104,7 +108,11 @@ export default function Login() {
           </div>
 
           <h1 className="auth-title">Sign in</h1>
-          <p className="auth-subtitle">Welcome back! Sign in to open the dashboard.</p>
+          <p className="auth-subtitle">
+            {SHOW_EMAIL_LOGIN
+              ? 'Welcome back! Sign in to open the dashboard.'
+              : 'Welcome back! Sign in with your Belgium Campus Microsoft account.'}
+          </p>
 
           {error && (
             <div className="alert alert-danger" role="alert">
@@ -126,57 +134,61 @@ export default function Login() {
             <p className="auth-note">Microsoft sign-in isn't configured yet — pending App Registration approval.</p>
           )}
 
-          <div className="auth-divider">or use your email</div>
+          {SHOW_EMAIL_LOGIN && (
+            <>
+              <div className="auth-divider">or use your email</div>
 
-          <form className="auth-form" onSubmit={handleSubmit}>
-            <div className="field">
-              <label htmlFor="email">Email</label>
-              <div className="input-wrap">
-                <Icon name="mail" size={16} />
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="you@belgiumcampus.ac.za"
-                  required
-                  autoComplete="username"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-            </div>
+              <form className="auth-form" onSubmit={handleSubmit}>
+                <div className="field">
+                  <label htmlFor="email">Email</label>
+                  <div className="input-wrap">
+                    <Icon name="mail" size={16} />
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="you@belgiumcampus.ac.za"
+                      required
+                      autoComplete="username"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                </div>
 
-            <div className="field">
-              <label htmlFor="password">Password</label>
-              <div className="input-wrap">
-                <Icon name="lock" size={16} />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  name="password"
-                  placeholder="••••••••"
-                  required
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="reveal-btn"
-                  onClick={() => setShowPassword((s) => !s)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  title={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  <Icon name={showPassword ? 'eyeOff' : 'eye'} size={16} />
+                <div className="field">
+                  <label htmlFor="password">Password</label>
+                  <div className="input-wrap">
+                    <Icon name="lock" size={16} />
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      id="password"
+                      name="password"
+                      placeholder="••••••••"
+                      required
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="reveal-btn"
+                      onClick={() => setShowPassword((s) => !s)}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      title={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      <Icon name={showPassword ? 'eyeOff' : 'eye'} size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                <button type="submit" className="btn btn-primary auth-submit" disabled={busy}>
+                  {busy ? <span className="btn-spinner" /> : null}
+                  {busy ? 'Signing in…' : 'Sign in'}
                 </button>
-              </div>
-            </div>
-
-            <button type="submit" className="btn btn-primary auth-submit" disabled={busy}>
-              {busy ? <span className="btn-spinner" /> : null}
-              {busy ? 'Signing in…' : 'Sign in'}
-            </button>
-          </form>
+              </form>
+            </>
+          )}
         </div>
 
         <div className="auth-footer">Access is limited to Belgium Campus</div>
