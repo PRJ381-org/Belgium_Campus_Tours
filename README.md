@@ -43,9 +43,9 @@ Automatically updated every Monday from our ClickUp board.
 Reference images: **[Campus Reference Images](https://belgiumcampusacza.sharepoint.com/:f:/s/PRJ3812026-STE-BCOM-Group3/IgBQnndqW5BwQLvyJaraki-zAdYiY74ln2q9eea4nOrb1PQ?e=GDixEC)**
 
 <!-- PROGRESS-REPORT:START -->
-### Weekly Progress Report — 28 Sep 2026
+### Weekly Progress Report — 05 Oct 2026
 
-_Reporting window: 21 Sep – 28 Sep 2026 · generated automatically from ClickUp_
+_Reporting window: 28 Sep – 05 Oct 2026 · generated automatically from ClickUp_
 
 | Metric | Count |
 |---|---|
