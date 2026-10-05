@@ -7,17 +7,17 @@
  * Leave photo as null to show the placeholder silhouette.
  */
 const team = [
-  { name: 'Team Member 1', photo: null },
-  { name: 'Team Member 2', photo: null },
-  { name: 'Team Member 3', photo: null },
-  { name: 'Team Member 4', photo: null },
-  { name: 'Team Member 5', photo: null },
-  { name: 'Team Member 6', photo: null },
-  { name: 'Team Member 7', photo: null },
-  { name: 'Team Member 8', photo: null },
-  { name: 'Team Member 9', photo: null },
-  { name: 'Team Member 10', photo: null },
-  { name: 'Team Member 11', photo: null },
+  { name: 'Louis Uys Schonborn', photo: null },
+  { name: 'Stephanus Cornelius Zondagh', photo: 'assets/team/stephanus.jpg' },
+  { name: 'Ruan Wolmarans', photo: 'assets/team/ruan.jpg' },
+  { name: 'Liam Dickson', photo: null },
+  { name: 'Joshua Kenneth Arnold', photo: 'assets/team/joshua.jpg' },
+  { name: 'Shaun van der Bijl', photo: null },
+  { name: 'Pandora Greyling', photo: null },
+  { name: 'Ethan Lindsay', photo: null },
+  { name: 'Chris David Fourie', photo: null },
+  { name: 'Robert Roelof Van Der Merwe', photo: null },
+  { name: 'Fourie Jooste', photo: null },
 ];
 
 export default team;

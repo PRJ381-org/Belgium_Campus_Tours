@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Reveal from './Reveal.jsx';
 import team from '../../data/team.js';
 
@@ -18,10 +19,23 @@ function Silhouette() {
   );
 }
 
+// Fisher-Yates shuffle on a copy, so nobody is always first.
+function shuffled(list) {
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
 /**
  * Team grid - edit src/data/team.js to add real names and photos.
+ * The order is shuffled once per page load.
  */
 export default function Team() {
+  const [members] = useState(() => shuffled(team));
+
   return (
     <section id="team" className="section team">
       <div className="section-head">
@@ -37,7 +51,7 @@ export default function Team() {
       </div>
 
       <div className="team-grid">
-        {team.map((m, i) => (
+        {members.map((m, i) => (
           <Reveal key={`${m.name}-${i}`} className="member" delay={(i % 4) * 90}>
             <div className="member-photo" style={{ background: m.photo ? undefined : GRADIENTS[i % GRADIENTS.length] }}>
               {m.photo ? <img src={m.photo} alt={m.name} loading="lazy" /> : <Silhouette />}
