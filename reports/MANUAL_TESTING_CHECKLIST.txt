@@ -1,0 +1,105 @@
+================================================================================
+🏛️ PRJ381 VIRTUAL CAMPUS OPEN DAY — MANUAL QA TESTING CHECKLIST & INSTRUCTIONS
+================================================================================
+Generated for: Team & Stakeholder Meeting / QA Lead
+Target Platforms: Meta Quest 3, Android Mobile, Windows PC Standalone, Web Portal
+Note: Automated suites (397 tests) verified backend, API, and math. The items below
+require physical hardware, human input, and Unreal Engine viewport validation.
+================================================================================
+
+--------------------------------------------------------------------------------
+1. META QUEST 3 VR HEADSET (HARDWARE TEST)
+--------------------------------------------------------------------------------
+[ ] 1.1 Sideload Build to Headset:
+    - Connect Quest 3 via USB-C to PC.
+    - Open Meta Quest Developer Hub (MQDH) or SideQuest.
+    - Install the packaged APK (PRJ381-Quest3.apk).
+    - Open the app from Unknown Sources.
+
+[ ] 1.2 Performance & Framerate Check:
+    - Enable OVR Metrics Tool overlay (or run `adb shell setprop debug.oculus.fps 1`).
+    - Verify baseline framerate maintains a steady 72 FPS (or 90 FPS).
+    - Look for stutter or frame drops when entering LVL_OuterCampus.
+    - Warning: OuterCampus viewpoint currently generates 278 draw calls (budget is 175).
+      Note if head-rotation induces any motion blur or hitching.
+
+[ ] 1.3 MetaHuman NPC Visual Audit:
+    - Approach each of the 8 NPCs in the campus hubs:
+      * Melanie & Craig (TechnoLab)
+      * Dengani & Helen (Library)
+      * Philip & Michael (Outer Campus)
+      * Surani & Themba (Auditorium / Hallway)
+    - Observe hair groom and face LOD transitions at 2m, 5m, and 10m distances.
+    - Confirm no "T-pose" or delayed skeletal mesh pop-in occurs.
+
+[ ] 1.4 VR Interaction & Hotspot Triggers:
+    - Point motion controllers at information kiosks.
+    - Pull trigger to open interactive panels.
+    - Confirm audio spatialization plays correctly in both ears.
+
+
+--------------------------------------------------------------------------------
+2. TECHNOLAB ESCAPE ROOM & BRONZE KEY SEQUENCE (GAMEPLAY TEST)
+--------------------------------------------------------------------------------
+[ ] 2.1 3D Printer & Key Pickup:
+    - Navigate into LVL_TechnoLab.
+    - Approach the 3D printer actor (BP_print3d).
+    - Trigger the print sequence and inspect the generated bronze key (BP_BronzeKey).
+    - Grab the key with your controller / mouse.
+
+[ ] 2.2 Door Unlock & State Persistence:
+    - Carry the bronze key to the locked lab exit door.
+    - Insert/trigger key on door lock.
+    - Confirm door opens and trigger transition to next area.
+    - Quit to main menu and reload to verify save persistence via CampusSaveManager.
+
+
+--------------------------------------------------------------------------------
+3. WINDOWS STANDALONE PACKAGING EXECUTION (UNREAL EDITOR TEST)
+--------------------------------------------------------------------------------
+[ ] 3.1 Unreal Engine 5.3 Packaging:
+    - Open PRJ381.uproject in Unreal Editor 5.3 on a PC with MSVC 2022 & Win64 SDK installed.
+    - Navigate to: Platforms > Windows > Package Project.
+    - Ensure output folder has: PRJ381.exe, Engine/, and Content/Paks/.
+
+[ ] 3.2 Level Transitions Across All 9 Cooked Maps:
+    - Launch PRJ381.exe directly.
+    - Confirm initial boot enters LVL_Persistent.
+    - Verify seamless map streaming into:
+      LVL_Library, LVL_TechnoLab, LVL_OuterCampus, LVL_Cafeteria,
+      LVL_Hallway, LVL_Alpha, LVL_Auditorium, LVL_Sigma.
+
+
+--------------------------------------------------------------------------------
+4. WEB PORTAL & MICROSOFT ENTRA ID LOGIN (BROWSER TEST)
+--------------------------------------------------------------------------------
+[ ] 4.1 Microsoft Entra ID Staff Authentication:
+    - Start backend server (npm start in backend/) or open deployed URL.
+    - Navigate to /login.html.
+    - Click "Sign in with Microsoft".
+    - Log in using Belgium Campus staff credentials (@belgiumcampus.ac.za).
+    - Verify successful redirection to /dashboard.html with valid profile avatar.
+
+[ ] 4.2 Admin Direct Fallback Login:
+    - If Entra ID is offline, click "Sign in with email and password".
+    - Enter admin@belgiumcampus.ac.za / Master password.
+    - Verify session dashboard unlocks with full administrative privileges.
+
+
+--------------------------------------------------------------------------------
+5. MOBILE DEVICE TOUCHSCREEN & AUTOCOMPLETE (SMARTPHONE TEST)
+--------------------------------------------------------------------------------
+[ ] 5.1 Autocomplete Email Trailing Space Trap:
+    - Open web portal on an Android (Chrome) or iPhone (Safari).
+    - Scroll down to "06 Feedback" or "Request Info".
+    - Begin typing email and tap keyboard autocomplete suggestion
+      (note: mobile keyboards automatically append a space "name@bc.ac.za ").
+    - Tap Submit. If error "A valid email is required" appears, note for backend team
+      to merge the .trim() fix.
+
+[ ] 5.2 Interactive Three.js 3D Orb on Mobile:
+    - Scroll through landing page hero section.
+    - Touch and drag on screen to test 3D glossy orb rotation and tilt responsiveness.
+    - Switch tabs or minimize browser for 10 seconds, then reopen.
+    - Verify canvas resumes rendering without a blank/black box.
+================================================================================
