@@ -43,22 +43,33 @@ Automatically updated every Monday from our ClickUp board.
 Reference images: **[Campus Reference Images](https://belgiumcampusacza.sharepoint.com/:f:/s/PRJ3812026-STE-BCOM-Group3/IgBQnndqW5BwQLvyJaraki-zAdYiY74ln2q9eea4nOrb1PQ?e=GDixEC)**
 
 <!-- PROGRESS-REPORT:START -->
-### Weekly Progress Report — 05 Oct 2026
+### Weekly Progress Report — 12 Oct 2026
 
-_Reporting window: 28 Sep – 05 Oct 2026 · generated automatically from ClickUp_
+_Reporting window: 05 Oct – 12 Oct 2026 · generated automatically from ClickUp_
 
 | Metric | Count |
 |---|---|
-| Total tickets on board | 57 |
-| ✅ Done (all time) | 23 |
-| 🔄 In progress | 17 |
-| 📋 To do | 17 |
-| 🎉 Completed this week | 0 |
-| 🆕 Created this week | 0 |
+| Total tickets on board | 67 |
+| ✅ Done (all time) | 35 |
+| 🔄 In progress | 18 |
+| 📋 To do | 14 |
+| 🎉 Completed this week | 12 |
+| 🆕 Created this week | 10 |
 
 **🎉 Completed this week**
 
-_Nothing marked done in the last 7 days._
+- **Telemetry Timeframe Filtering & Query Fuzzing** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bn4)
+- **Direct Binary Build Streaming & Distribution Pipeline** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bn2)
+- **Unreal C++ Save System State Machine Verification** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bn0)
+- **Frontend React Client Logic & CSV Engine Unit Testing** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmz)
+- **Database Migration & Index Preflight Scripts Validation** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmx)
+- **System Outage Circuit Breaker & Resilience Testing** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmv)
+- **Deep Penetration & Prototype Pollution Hardening** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmr)
+- **Cryptographic Ticket Security & Anti-Bot Honeypot Defense** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmp)
+- **High-Concurrency Socket Load & Saturation Benchmarks** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmn)
+- **Website Adversarial Penetration Testing** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmm)
+- **Performance benchmarking (Unreal Insights, 90fps)** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmqv)
+- **Test UI limitations (bug-free interface)** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmqm)
 
 **🔄 In progress**
 
@@ -70,10 +81,11 @@ _Nothing marked done in the last 7 days._
 - **Scan lecturers for MetaHuman capture (9 staff)** — Robert Van Der Merwe · [open](https://app.clickup.com/t/86cb94xy3)
 - **Offline lead cache + retry (Request-More-Info)** — Robert Van Der Merwe · [open](https://app.clickup.com/t/86cb7ep1t)
 - **Techno Lab NPC Logic** — Louis Schonborn, Fourie · [open](https://app.clickup.com/t/86cb0u8hx)
-- **Virtual Escape Room Game** — liam dickson, Louis Schonborn · [open](https://app.clickup.com/t/86cb0tym5)
-- **Packaging the project and test functionality** — Shaun van der Bijl, Robert Van Der Merwe · [open](https://app.clickup.com/t/86cav821u)
-- **Test VR functionality (bug-free, engaging)** — unassigned · [open](https://app.clickup.com/t/86cajkmqd)
-- **Test assets for bugs & artifacts** — unassigned · [open](https://app.clickup.com/t/86cajkmq9)
+- **Virtual Escape Room Game** — Louis Schonborn, liam dickson · [open](https://app.clickup.com/t/86cb0tym5)
+- **Packaging the project and test functionality** — Shaun van der Bijl, Robert Van Der Merwe, Chris Fourie · [open](https://app.clickup.com/t/86cav821u)
+- **Usability testing (SUS)** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmqz)
+- **Test VR functionality (bug-free, engaging)** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmqd)
+- **Test assets for bugs & artifacts** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmq9)
 - **Collect multimedia per area (photos/videos/text)** — Robert Van Der Merwe, Ethan Lindsay · [open](https://app.clickup.com/t/86cajkmq2)
 - **Texture & optimise assets for 90fps target** — unassigned · [open](https://app.clickup.com/t/86cajkmpf)
 - **UI + open-day / campus selection screen** — Ethan Lindsay, Chris Fourie, Joshua Arnold · [open](https://app.clickup.com/t/86cajkmgv)
@@ -99,15 +111,13 @@ _Nothing due in the coming week._
 - **Firebase API-key restriction + secrets hardening (pre-ship)** — Robert Van Der Merwe · [open](https://app.clickup.com/t/86cb7epat)
 - **Offline lead cache + retry (Request-More-Info)** — Robert Van Der Merwe · [open](https://app.clickup.com/t/86cb7ep1t)
 - **Techno Lab NPC Logic** — Louis Schonborn, Fourie · [open](https://app.clickup.com/t/86cb0u8hx)
-- **Virtual Escape Room Game** — liam dickson, Louis Schonborn · [open](https://app.clickup.com/t/86cb0tym5)
-- **Packaging the project and test functionality** — Shaun van der Bijl, Robert Van Der Merwe · [open](https://app.clickup.com/t/86cav821u)
-- **Final testing before deployment** — unassigned · [open](https://app.clickup.com/t/86cajkmre)
-- **Full application test (bug-free experience)** — unassigned · [open](https://app.clickup.com/t/86cajkmr6)
-- **Usability testing (SUS)** — unassigned · [open](https://app.clickup.com/t/86cajkmqz)
-- **Performance benchmarking (Unreal Insights, 90fps)** — unassigned · [open](https://app.clickup.com/t/86cajkmqv)
-- **Test UI limitations (bug-free interface)** — unassigned · [open](https://app.clickup.com/t/86cajkmqm)
-- **Test VR functionality (bug-free, engaging)** — unassigned · [open](https://app.clickup.com/t/86cajkmqd)
-- **Test assets for bugs & artifacts** — unassigned · [open](https://app.clickup.com/t/86cajkmq9)
+- **Virtual Escape Room Game** — Louis Schonborn, liam dickson · [open](https://app.clickup.com/t/86cb0tym5)
+- **Packaging the project and test functionality** — Shaun van der Bijl, Robert Van Der Merwe, Chris Fourie · [open](https://app.clickup.com/t/86cav821u)
+- **Final testing before deployment** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmre)
+- **Full application test (bug-free experience)** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmr6)
+- **Usability testing (SUS)** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmqz)
+- **Test VR functionality (bug-free, engaging)** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmqd)
+- **Test assets for bugs & artifacts** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmq9)
 - **Optional audio narration** — unassigned · [open](https://app.clickup.com/t/86cajkmq6)
 - **Collect multimedia per area (photos/videos/text)** — Robert Van Der Merwe, Ethan Lindsay · [open](https://app.clickup.com/t/86cajkmq2)
 - **Texture & optimise assets for 90fps target** — unassigned · [open](https://app.clickup.com/t/86cajkmpf)
