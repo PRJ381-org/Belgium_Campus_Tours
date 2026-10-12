@@ -7,17 +7,17 @@
  * Leave photo as null to show the placeholder silhouette.
  */
 const team = [
-  { name: 'Louis Uys Schonborn', photo: null },
+  { name: 'Louis Uys Schonborn', photo: 'assets/team/louis.jpg' },
   { name: 'Stephanus Cornelius Zondagh', photo: 'assets/team/stephanus.jpg' },
   { name: 'Ruan Wolmarans', photo: 'assets/team/ruan.jpg' },
-  { name: 'Liam Dickson', photo: null },
-  { name: 'Joshua Kenneth Arnold', photo: 'assets/team/joshua.jpg' },
-  { name: 'Shaun van der Bijl', photo: null },
+  { name: 'Liam Dickson', photo: 'assets/team/liam.jpg' },
+  { name: 'Joshua Arnold', photo: 'assets/team/joshua.jpg' },
+  { name: 'Shaun van der Bijl', photo: 'assets/team/shaun.jpg' },
   { name: 'Pandora Greyling', photo: null },
-  { name: 'Ethan Lindsay', photo: null },
-  { name: 'Chris David Fourie', photo: null },
-  { name: 'Robert Roelof Van Der Merwe', photo: null },
-  { name: 'Fourie Jooste', photo: null },
+  { name: 'Ethan Lindsay', photo: 'assets/team/ethan.jpg' },
+  { name: 'Chris David Fourie', photo: 'assets/team/chris.jpg' },
+  { name: 'Robert Roelof Van Der Merwe', photo: 'assets/team/robert.jpg' },
+  { name: 'Fourie Jooste', photo: 'assets/team/fourie-jooste.jpg' },
 ];
 
 export default team;
