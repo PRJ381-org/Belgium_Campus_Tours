@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 using UnrealBuildTool;
+using System.IO;
 
 public class PRJ381 : ModuleRules
 {
@@ -10,7 +11,22 @@ public class PRJ381 : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Json", "JsonUtilities", "HTTP" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.Add("PakFile");
+		bool SupportsGooglePAD = Target.Platform == UnrealTargetPlatform.Android
+			|| Target.Platform == UnrealTargetPlatform.Win64
+			|| Target.Platform == UnrealTargetPlatform.Mac
+			|| Target.Platform == UnrealTargetPlatform.Linux;
+		PrivateDefinitions.Add("PRJ381_WITH_GOOGLEPAD=" + (SupportsGooglePAD ? "1" : "0"));
+		if (SupportsGooglePAD)
+		{
+			PrivateDependencyModuleNames.Add("GooglePAD");
+		}
+		if (Target.Platform == UnrealTargetPlatform.Android)
+		{
+			// GooglePAD's public header includes this SDK, but its module keeps the path private.
+			PrivateIncludePaths.Add(Path.Combine(EngineDirectory,
+				"Plugins/Runtime/GooglePAD/Source/ThirdParty/play-core-native-sdk/include"));
+		}
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
