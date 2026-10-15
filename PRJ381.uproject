@@ -50,6 +50,14 @@
 		{
 			"Name": "ChaosCloth",
 			"Enabled": true
+		},
+		{
+			"Name": "Aura",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Win64",
+				"Mac"
+			]
 		}
 	],
 	"TargetPlatforms": [
