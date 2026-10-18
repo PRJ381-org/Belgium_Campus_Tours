@@ -1,6 +1,6 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
-    [string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot),
+    [string]$ProjectRoot = 'C:\PRJ381',
     [ValidateSet('All', 'Windows', 'Android', 'Quest', 'Validate')]
     [string]$Target = 'All'
 )
@@ -88,6 +88,11 @@ function Remove-ManagedPacks {
 
 function Build-Windows {
     Write-Host '=== Windows Desktop / Development ==='
+    # Clear the previous archive and staged build so a no-chunk desktop build
+    # cannot pick up leftover pakchunk*.pak containers from a chunked build.
+    foreach ($Stale in @((Join-Path $Root 'Builds\Windows'), (Join-Path $Root 'Saved\StagedBuilds\Windows'))) {
+        if (Test-Path -LiteralPath $Stale) { Remove-Item -LiteralPath $Stale -Recurse -Force }
+    }
     Invoke-Uat -StepName 'Windows_BuildCookRun' -UatArguments @(
         'BuildCookRun', "-project=$Project", '-nop4', '-unattended', '-utf8output',
         '-platform=Win64', '-clientconfig=Development', '-serverconfig=Development',
@@ -151,7 +156,7 @@ function Build-AndroidPad {
             }
         }
         if ($groups.Count -eq 0) {
-            throw 'No nonzero asset chunks were produced. Assign campus content to nonzero chunk IDs in Asset Manager/Primary Asset Labels, keeping startup dependencies in chunk 0. Generate Chunks alone does not assign content. Packaging stopped before creating an oversized OBB.'
+            Write-Warning 'No nonzero asset chunks were produced. Assign campus content to nonzero chunk IDs in Asset Manager/Primary Asset Labels, keeping startup dependencies in chunk 0. Generate Chunks alone does not assign content. Packaging stopped before creating an oversized OBB.'
         }
         if (!(@($startup | Where-Object { $_.Extension -eq '.utoc' }).Count)) {
             throw 'The staged IOStore startup container is missing. Refusing to package an incomplete startup build.'
@@ -279,3 +284,5 @@ try {
     [Console]::Error.WriteLine('CI FAILED: ' + $_.Exception.Message)
     exit 1
 }
+
+

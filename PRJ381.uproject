@@ -12,6 +12,10 @@
 	],
 	"Plugins": [
 		{
+			"Name": "GameFeatures",
+			"Enabled": true
+		},
+		{
 			"Name": "OpenXR",
 			"Enabled": true
 		},
