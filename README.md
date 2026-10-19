@@ -43,9 +43,9 @@ Automatically updated every Monday from our ClickUp board.
 Reference images: **[Campus Reference Images](https://belgiumcampusacza.sharepoint.com/:f:/s/PRJ3812026-STE-BCOM-Group3/IgBQnndqW5BwQLvyJaraki-zAdYiY74ln2q9eea4nOrb1PQ?e=GDixEC)**
 
 <!-- PROGRESS-REPORT:START -->
-### Weekly Progress Report — 12 Oct 2026
+### Weekly Progress Report — 19 Oct 2026
 
-_Reporting window: 05 Oct – 12 Oct 2026 · generated automatically from ClickUp_
+_Reporting window: 12 Oct – 19 Oct 2026 · generated automatically from ClickUp_
 
 | Metric | Count |
 |---|---|
@@ -53,23 +53,12 @@ _Reporting window: 05 Oct – 12 Oct 2026 · generated automatically from ClickU
 | ✅ Done (all time) | 35 |
 | 🔄 In progress | 18 |
 | 📋 To do | 14 |
-| 🎉 Completed this week | 12 |
-| 🆕 Created this week | 10 |
+| 🎉 Completed this week | 0 |
+| 🆕 Created this week | 0 |
 
 **🎉 Completed this week**
 
-- **Telemetry Timeframe Filtering & Query Fuzzing** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bn4)
-- **Direct Binary Build Streaming & Distribution Pipeline** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bn2)
-- **Unreal C++ Save System State Machine Verification** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bn0)
-- **Frontend React Client Logic & CSV Engine Unit Testing** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmz)
-- **Database Migration & Index Preflight Scripts Validation** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmx)
-- **System Outage Circuit Breaker & Resilience Testing** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmv)
-- **Deep Penetration & Prototype Pollution Hardening** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmr)
-- **Cryptographic Ticket Security & Anti-Bot Honeypot Defense** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmp)
-- **High-Concurrency Socket Load & Saturation Benchmarks** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmn)
-- **Website Adversarial Penetration Testing** — Chris Fourie · [open](https://app.clickup.com/t/1243w4q7bmm)
-- **Performance benchmarking (Unreal Insights, 90fps)** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmqv)
-- **Test UI limitations (bug-free interface)** — Chris Fourie · [open](https://app.clickup.com/t/86cajkmqm)
+_Nothing marked done in the last 7 days._
 
 **🔄 In progress**
 
