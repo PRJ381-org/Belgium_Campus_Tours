@@ -1,0 +1,20 @@
+Using bundled DotNet SDK version: 10.0 win-x64
+Running UnrealBuildTool: dotnet "..\..\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" PRJ381 Win64 Development -Project="C:\PRJ381\PRJ381.uproject" -Verbose -WaitMutex
+Log file: C:\Users\shaun\AppData\Local\UnrealBuildTool\Log.txt
+Determining max actions to execute in parallel (14 physical cores, 20 logical cores)
+  Executing up to 14 processes, one per physical core
+  Requested 1.5 GB memory per action, 10.48 GB available: limiting max parallel actions to 6
+Using 'git status' to determine working set for adaptive non-unity build (C:\PRJ381).
+Creating makefile for PRJ381 (.uproject file is newer)
+UbaServer - Listening on 0.0.0.0:1345
+Available x64 toolchains (1):
+ * C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231
+    (Family=14.51.36231, FamilyRank=2, Version=14.51.36260, HostArchitecture=x64, ReleaseChannel=Latest, Architecture=x64)
+Visual Studio compiler version 14.51.36260 is newer than latest preferred version 14.50.35717. Please use caution as this compiler has not been heavily tested
+Unable to find plugin 'ZZZProbePlugin' (referenced via PRJ381.uproject). Install it and try again, or remove it from the required plugin list.
+
+Result: Failed (OtherCompilationError)
+Total execution time: 2.49 seconds
+Trace written to file C:\Users\shaun\AppData\Local\UnrealBuildTool\Trace.uba with size 2.0kb
+EXITCODE=6 
+BUILD_DONE_MARKER 

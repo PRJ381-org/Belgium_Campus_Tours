@@ -1,0 +1,58 @@
+============================================================
+Starting PRJ381 Build Pipeline
+Project Root : "C:\PRJ381"
+Target       : "Windows"
+Script       : "C:\PRJ381\scripts\build_pipeline.ps1"
+============================================================
+=== Windows Desktop / Development ===
+RunUAT [Windows_BuildCookRun]: BuildCookRun -project=C:\PRJ381\PRJ381.uproject -nop4 -unattended -utf8output -platform=Win64 -clientconfig=Development -serverconfig=Development -build -cook -allmaps -stage -pak -package -archive -archivedirectory=C:\PRJ381\Builds\Windows -ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:bGenerateChunks=False -ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:bGenerateNoChunks=True -log=C:\PRJ381\Saved\Logs\UAT_Windows_BuildCookRun_de6ac1e673424c52b99df4935d262198.log
+Running AutomationTool...
+Using bundled DotNet SDK version: 10.0 win-x64
+Starting AutomationTool...
+Parsing command line: BuildCookRun -project=C:\PRJ381\PRJ381.uproject -nop4 -unattended -utf8output -platform=Win64 -clientconfig=Development -serverconfig=Development -build -cook -allmaps -stage -pak -package -archive -archivedirectory=C:\PRJ381\Builds\Windows -ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:bGenerateChunks=False -ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:bGenerateNoChunks=True -log=C:\PRJ381\Saved\Logs\UAT_Windows_BuildCookRun_de6ac1e673424c52b99df4935d262198.log
+Initializing script modules...
+Total script module initialization time: 1.41 s.
+Using C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe
+Executing commands...
+Setting up ProjectParams for C:\PRJ381\PRJ381.uproject
+********** BUILD COMMAND STARTED **********
+Running: C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\ThirdParty\DotNet\10.0\win-x64\dotnet.exe "C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" -Target="PRJ381Editor Win64 Development -Project=C:\PRJ381\PRJ381.uproject" -Target="PRJ381 Win64 Development -Project=C:\PRJ381\PRJ381.uproject  -remoteini=\"C:\PRJ381\"  -skipdeploy -ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:bGenerateChunks=False -ini:Game:[/Script/UnrealEd.ProjectPackagingSettings]:bGenerateNoChunks=True " -log="C:\Users\shaun\AppData\Roaming\Unreal Engine\AutomationTool\Logs\C+Program+Files+Epic+Games+UE_5.8\UBA-PRJ381Editor-Win64-Development.txt"
+Log file: C:\Users\shaun\AppData\Roaming\Unreal Engine\AutomationTool\Logs\C+Program+Files+Epic+Games+UE_5.8\UBA-PRJ381Editor-Win64-Development.txt
+Determining max actions to execute in parallel (14 physical cores, 20 logical cores)
+  Executing up to 14 processes, one per physical core
+  Requested 1.5 GB memory per action, 10.16 GB available: limiting max parallel actions to 6
+Using 'git status' to determine working set for adaptive non-unity build (C:\PRJ381).
+Creating makefile for PRJ381Editor (.uproject file is newer)
+Creating makefile for PRJ381 (.uproject file is newer)
+UbaServer - Listening on 0.0.0.0:1345
+Available x64 toolchains (1):
+Available x64 toolchains (1):
+ * C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231
+    (Family=14.51.36231, FamilyRank=2, Version=14.51.36260, HostArchitecture=x64, ReleaseChannel=Latest, Architecture=x64)
+ * C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231
+    (Family=14.51.36231, FamilyRank=2, Version=14.51.36260, HostArchitecture=x64, ReleaseChannel=Latest, Architecture=x64)
+Visual Studio compiler version 14.51.36260 is newer than latest preferred version 14.50.35717. Please use caution as this compiler has not been heavily tested
+Visual Studio compiler version 14.51.36260 is newer than latest preferred version 14.50.35717. Please use caution as this compiler has not been heavily tested
+Plugin 'MetaHumanGenerator' depends on plugin 'StructUtils' which was deprecated in 5.5 and will soon be removed. Please update your dependencies.
+Project 'PRJ381' depends on plugin 'StructUtils' which was deprecated in 5.5 and will soon be removed. Please update your dependencies.
+Plugin 'MetaHumanGenerator' depends on plugin 'StructUtils' which was deprecated in 5.5 and will soon be removed. Please update your dependencies.
+Project 'PRJ381Editor' depends on plugin 'StructUtils' which was deprecated in 5.5 and will soon be removed. Please update your dependencies.
+Unable to build while Live Coding is active. Exit the editor and game, or press Ctrl+Alt+F11 if iterating on code in the editor or game
+
+Result: Failed (OtherCompilationError)
+Total execution time: 133.50 seconds
+Trace written to file C:\Users\shaun\AppData\Local\UnrealBuildTool\Trace.uba with size 12.5kb
+Took 134,04s to run dotnet.exe, ExitCode=6
+UnrealBuildTool failed. See log for more details. (C:\Users\shaun\AppData\Roaming\Unreal Engine\AutomationTool\Logs\C+Program+Files+Epic+Games+UE_5.8\UBA-PRJ381Editor-Win64-Development.txt)
+AutomationTool executed for 0h 2m 30s
+AutomationTool exiting with ExitCode=6 (6)
+BUILD FAILED
+CI FAILED: RunUAT [Windows_BuildCookRun] failed with exit code 6 (see C:\PRJ381\Saved\Logs\UAT_Windows_BuildCookRun_de6ac1e673424c52b99df4935d262198.log). No subsequent build step will run.
+
+============================================================
+[BUILD FAILED] Exit code: 1
+Check "C:\PRJ381\Saved\Logs\" for UAT logs.
+============================================================
+Press any key to continue . . . 
+EXITCODE=1 
+WIN_BUILD_DONE 

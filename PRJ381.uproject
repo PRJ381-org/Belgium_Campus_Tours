@@ -12,6 +12,10 @@
 	],
 	"Plugins": [
 		{
+			"Name": "GameFeatures",
+			"Enabled": true
+		},
+		{
 			"Name": "OpenXR",
 			"Enabled": true
 		},
@@ -50,6 +54,14 @@
 		{
 			"Name": "ChaosCloth",
 			"Enabled": true
+		},
+		{
+			"Name": "Aura",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Win64",
+				"Mac"
+			]
 		}
 	],
 	"TargetPlatforms": [

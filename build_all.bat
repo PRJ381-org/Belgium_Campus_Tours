@@ -1,41 +1,51 @@
 @echo off
+setlocal EnableDelayedExpansion
 title PRJ381 CI/CD Build Script
 
-:: Adjust this path to match your exact Unreal Engine 5 installation directory version
-set UAT_BAT="C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\RunUAT.bat"
-set PROJECT_FILE="%~dp0PRJ381.uproject"
+:: Usage: build_all.bat [All|Windows|Android|Quest|Validate] [--ci]
+set "BUILD_TARGET=%~1"
+set "CI_MODE=%~2"
+if not defined BUILD_TARGET set "BUILD_TARGET=All"
 
-:: Output directories for each platform build
-set ARCHIVE_DIR_WIN="%~dp0Builds\Windows"
-set ARCHIVE_DIR_ANDROID="%~dp0Builds\Android"
-set ARCHIVE_DIR_QUEST="%~dp0Builds\Quest3"
+:: Strip trailing backslash from script directory
+set "PROJECT_ROOT=%~dp0"
+if "%PROJECT_ROOT:~-1%"=="\" set "PROJECT_ROOT=%PROJECT_ROOT:~0,-1%"
 
-echo ========================================
-echo Clearing cached build data...
-echo ========================================
-:: These commands delete the cached folders to prevent the Error_ObbNotFound bug
-rmdir /s /q "%~dp0Binaries"
-rmdir /s /q "%~dp0Intermediate"
-rmdir /s /q "%~dp0Saved"
-echo Cache cleared successfully!
+set "PS_SCRIPT=%PROJECT_ROOT%\scripts\build_pipeline.ps1"
+if not exist "%PS_SCRIPT%" (
+    if exist "%PROJECT_ROOT%\build_pipeline.ps1" (
+        set "PS_SCRIPT=%PROJECT_ROOT%\build_pipeline.ps1"
+    ) else (
+        echo [ERROR] Cannot find build_pipeline.ps1 in "%PROJECT_ROOT%\scripts\" or "%PROJECT_ROOT%\"
+        if /i not "%CI_MODE%"=="--ci" pause
+        exit /b 1
+    )
+)
 
-echo ========================================
-echo Building PRJ381 for Windows Desktop...
-echo ========================================
-call %UAT_BAT% BuildCookRun -project=%PROJECT_FILE% -noP4 -platform=Win64 -clientconfig=Development -serverconfig=Development -clean -cook -allmaps -build -stage -pak -package -archive -archivedirectory=%ARCHIVE_DIR_WIN%
+if not exist "%PROJECT_ROOT%\Saved\Logs" mkdir "%PROJECT_ROOT%\Saved\Logs"
 
-echo ========================================
-echo Building PRJ381 for Android Mobile...
-echo ========================================
-call %UAT_BAT% BuildCookRun -project=%PROJECT_FILE% -noP4 -platform=Android -cookflavor=Multi -clientconfig=Development -serverconfig=Development -clean -cook -allmaps -build -stage -pak -package -archive -archivedirectory=%ARCHIVE_DIR_ANDROID%
+echo ============================================================
+echo Starting PRJ381 Build Pipeline
+echo Project Root : "%PROJECT_ROOT%"
+echo Target       : "%BUILD_TARGET%"
+echo Script       : "%PS_SCRIPT%"
+echo ============================================================
 
-echo ========================================
-echo Building PRJ381 for Meta Quest 3...
-echo ========================================
-:: The Quest relies on the ASTC texture compression flavor
-call %UAT_BAT% BuildCookRun -project=%PROJECT_FILE% -noP4 -platform=Android -cookflavor=ASTC -clientconfig=Development -serverconfig=Development -clean -cook -allmaps -build -stage -pak -package -archive -archivedirectory=%ARCHIVE_DIR_QUEST%
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%PS_SCRIPT%" -ProjectRoot "%PROJECT_ROOT%" -Target "%BUILD_TARGET%"
+set "BUILD_RESULT=%ERRORLEVEL%"
 
-echo ========================================
-echo CI/CD Build Pipeline Complete!
-echo ========================================
-pause
+echo.
+if not "%BUILD_RESULT%"=="0" (
+    echo ============================================================
+    echo [BUILD FAILED] Exit code: %BUILD_RESULT%
+    echo Check "%PROJECT_ROOT%\Saved\Logs\" for UAT logs.
+    echo ============================================================
+    if /i not "%CI_MODE%"=="--ci" pause
+) else (
+    echo ============================================================
+    echo [BUILD SUCCEEDED] All requested stages completed.
+    echo ============================================================
+    if /i not "%CI_MODE%"=="--ci" pause
+)
+
+exit /b %BUILD_RESULT%
