@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Reveal from './Reveal.jsx';
+import team from '../../data/team.js';
 import { useReveal, useScrollProgress, prefersReducedMotion } from '../../lib/scroll.js';
 
 const STATEMENT =
@@ -8,7 +9,7 @@ const STATEMENT =
 const STATS = [
   { value: 3, suffix: '', label: 'Platforms supported' },
   { value: 360, suffix: '°', label: 'Free exploration' },
-  { value: 11, suffix: '', label: 'Student developers' },
+  { value: team.length, suffix: '', label: 'Student developers' },
   { value: 24, suffix: '/7', label: 'Campus always open' },
 ];
 
