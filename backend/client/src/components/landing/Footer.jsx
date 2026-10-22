@@ -18,7 +18,7 @@ export default function Footer() {
           <a href="login.html">Staff login</a>
         </nav>
       </div>
-      <div className="footer-bottom">© {new Date().getFullYear()} Belgium Campus · PRJ381</div>
+      <div className="footer-bottom">© {new Date().getFullYear()} Belgium Campus · PRJ381 · STE-BCOM-Group 3</div>
     </footer>
   );
 }
