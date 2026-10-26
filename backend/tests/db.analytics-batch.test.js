@@ -53,6 +53,19 @@ describeDb('POST /api/analytics/batch (database-backed)', () => {
     expect(await AnalyticsEvent.countDocuments({ eventType: 'objective_complete' })).toBe(1);
   });
 
+  test('accepts game_download, logged by the website download routes', async () => {
+    await AnalyticsEvent.create({
+      sessionId: 'web-dl-test',
+      eventType: 'game_download',
+      area: 'WebDownloadPortal',
+      hotspotId: 'mobile_build',
+      durationMs: 0,
+      seq: 1,
+    });
+
+    expect(await AnalyticsEvent.countDocuments({ eventType: 'game_download' })).toBe(1);
+  });
+
   test('a full 200-event batch round-trips', async () => {
     const events = Array.from({ length: 200 }, (_, i) => mkEvent(i));
     const res = await request(app).post('/api/analytics/batch').send({ events });
