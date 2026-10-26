@@ -11,7 +11,7 @@ public class PRJ381 : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Json", "JsonUtilities", "HTTP" });
 
-		PrivateDependencyModuleNames.Add("PakFile");
+		PrivateDependencyModuleNames.AddRange(new string[] { "PakFile", "AssetRegistry" });
 		bool SupportsGooglePAD = Target.Platform == UnrealTargetPlatform.Android
 			|| Target.Platform == UnrealTargetPlatform.Win64
 			|| Target.Platform == UnrealTargetPlatform.Mac

@@ -300,9 +300,9 @@ try {
     Push-Location $Root
     try {
         switch ($Target) {
-            'All' { Build-Windows; Build-AndroidPad; Build-Quest }
+            'All' { Build-Windows; Build-Quest }
             'Windows' { Build-Windows }
-            'Android' { Build-AndroidPad }
+            'Android' { throw 'The Android AAB/GooglePAD target is retired: bPackageDataInsideApk=True makes the GooglePAD APL disable itself, so no asset packs are generated and the AAB cannot pass chunk validation. Use Download for the website APK.' }
             'Download' { Build-Download }
             'Quest' { Build-Quest }
         }
