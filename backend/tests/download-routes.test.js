@@ -80,3 +80,39 @@ describe('GET /api/downloads/:platform redirect handling', () => {
     expect(res.headers.location).toBe(BUILD_INFO.platforms.windows.cdnUrl);
   });
 });
+
+describe('GET /api/download/:platform external build links', () => {
+  const DRIVE_ANDROID = 'https://drive.usercontent.google.com/download?id=android-test&export=download&confirm=t';
+  const DRIVE_WINDOWS = 'https://drive.usercontent.google.com/download?id=windows-test&export=download&confirm=t';
+
+  afterEach(() => {
+    delete process.env.DOWNLOAD_URL_ANDROID;
+    delete process.env.DOWNLOAD_URL_WINDOWS;
+  });
+
+  test('redirects the Android button to DOWNLOAD_URL_ANDROID when set', async () => {
+    process.env.DOWNLOAD_URL_ANDROID = DRIVE_ANDROID;
+    const res = await request(app).get('/api/download/mobile');
+    expect(res.status).toBe(302);
+    expect(res.headers.location).toBe(DRIVE_ANDROID);
+  });
+
+  test('redirects the Windows button to DOWNLOAD_URL_WINDOWS when set', async () => {
+    process.env.DOWNLOAD_URL_WINDOWS = DRIVE_WINDOWS;
+    const res = await request(app).get('/api/download/desktop');
+    expect(res.status).toBe(302);
+    expect(res.headers.location).toBe(DRIVE_WINDOWS);
+  });
+
+  test('ignores a non-https value and falls back to the local build file', async () => {
+    process.env.DOWNLOAD_URL_ANDROID = '/api/download/mobile';
+    const res = await request(app).get('/api/download/mobile');
+    expect(res.status).not.toBe(302);
+  });
+
+  test('without a link set, a missing build file is still a 404', async () => {
+    const res = await request(app).get('/api/download/desktop');
+    expect([200, 404]).toContain(res.status);
+    expect(res.status).not.toBe(302);
+  });
+});

@@ -7,6 +7,7 @@ const BUILDS_DIR = path.join(__dirname, '../../builds');
 // Authoritative build files and fallback candidates
 const PLATFORM_MAP = {
   desktop: {
+    externalUrlEnv: 'DOWNLOAD_URL_WINDOWS',
     downloadName: 'BCI_Campus_Tour-Windows.zip',
     contentType: 'application/zip',
     candidates: [
@@ -16,6 +17,7 @@ const PLATFORM_MAP = {
     ],
   },
   windows: {
+    externalUrlEnv: 'DOWNLOAD_URL_WINDOWS',
     downloadName: 'BCI_Campus_Tour-Windows.zip',
     contentType: 'application/zip',
     candidates: [
@@ -25,6 +27,7 @@ const PLATFORM_MAP = {
     ],
   },
   mobile: {
+    externalUrlEnv: 'DOWNLOAD_URL_ANDROID',
     downloadName: 'BCI_Campus_Tour-Android.apk',
     contentType: 'application/vnd.android.package-archive',
     candidates: [
@@ -34,6 +37,7 @@ const PLATFORM_MAP = {
     ],
   },
   android: {
+    externalUrlEnv: 'DOWNLOAD_URL_ANDROID',
     downloadName: 'BCI_Campus_Tour-Android.apk',
     contentType: 'application/vnd.android.package-archive',
     candidates: [
@@ -43,6 +47,27 @@ const PLATFORM_MAP = {
     ],
   },
 };
+
+// Builds hosted elsewhere (e.g. Google Drive): set DOWNLOAD_URL_WINDOWS /
+// DOWNLOAD_URL_ANDROID in hPanel and the buttons redirect there instead of
+// streaming from builds/. Only absolute https links count, so a relative
+// default can never loop back to this route.
+function externalUrl(target) {
+  const url = (process.env[target.externalUrlEnv] || '').trim();
+  return url.startsWith('https://') ? url : null;
+}
+
+function logDownload(req, platform) {
+  // Non-blocking telemetry ingestion
+  AnalyticsEvent.create({
+    sessionId: req.query.sessionId || `web-dl-${Date.now()}`,
+    eventType: 'game_download',
+    area: 'WebDownloadPortal',
+    hotspotId: `${platform}_build`,
+    durationMs: 0,
+    seq: 1,
+  }).catch(() => {});
+}
 
 exports.downloadBuild = (req, res) => {
   const platform = (req.params.platform || '').toLowerCase();
@@ -59,21 +84,19 @@ exports.downloadBuild = (req, res) => {
     return res.status(400).send('Invalid platform requested. Use desktop/windows or mobile/android.');
   }
 
+  const redirectTo = externalUrl(target);
+  if (redirectTo) {
+    logDownload(req, platform);
+    return res.redirect(302, redirectTo);
+  }
+
   const filePath = target.candidates.find((candidate) => fs.existsSync(candidate));
 
   if (!filePath) {
     return res.status(404).send(`Build file (${target.downloadName}) not found on the server.`);
   }
 
-  // Non-blocking telemetry ingestion
-  AnalyticsEvent.create({
-    sessionId: req.query.sessionId || `web-dl-${Date.now()}`,
-    eventType: 'game_download',
-    area: 'WebDownloadPortal',
-    hotspotId: `${platform}_build`,
-    durationMs: 0,
-    seq: 1,
-  }).catch(() => {});
+  logDownload(req, platform);
 
   const stat = fs.statSync(filePath);
   res.setHeader('Content-Disposition', `attachment; filename="${target.downloadName}"`);
