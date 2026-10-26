@@ -1,7 +1,7 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [string]$ProjectRoot = 'C:\PRJ381',
-    [ValidateSet('All', 'Windows', 'Android', 'Quest', 'Validate')]
+    [ValidateSet('All', 'Windows', 'Android', 'Download', 'Quest', 'Validate')]
     [string]$Target = 'All'
 )
 Set-StrictMode -Version Latest
@@ -246,6 +246,34 @@ function Build-AndroidPad {
     }
 }
 
+function Build-Download {
+    Write-Host '=== Android Sideload / Development / ASTC / single self-contained APK ==='
+    # Website build. One APK any device can install, with no Google Play services and no bundletool.
+    # Bundle and asset packs are off so nothing is downloaded at runtime, and the game data is
+    # folded into the APK so there is no separate OBB for the user to place by hand.
+    $Archive = Join-Path $Root 'Builds\Download'
+    if (Test-Path -LiteralPath $Archive) { Remove-Item -LiteralPath $Archive -Recurse -Force }
+    Invoke-Uat -StepName 'Android_Download' -UatArguments @(
+        'BuildCookRun', "-project=$Project", '-nop4', '-unattended', '-utf8output',
+        '-platform=Android', '-cookflavor=ASTC',
+        '-clientconfig=Development', '-serverconfig=Development',
+        '-build', '-cook', '-allmaps', '-stage', '-pak', '-package', '-archive',
+        "-archivedirectory=$Archive",
+        (Get-ConfigArgument Engine $AndroidSection bEnableBundle False),
+        (Get-ConfigArgument Engine $AndroidSection bPackageDataInsideApk True),
+        (Get-ConfigArgument Engine $AndroidSection bPackageForMetaQuest False),
+        (Get-ConfigArgument Engine $AndroidSection bAllowPatchOBBFile False),
+        (Get-ConfigArgument Engine $AndroidSection bDisableVerifyOBBOnStartUp False),
+        (Get-ConfigArgument Game $PackagingSection bGenerateChunks False),
+        (Get-ConfigArgument Game $PackagingSection bGenerateNoChunks True)
+    )
+    $Built = @(Get-ChildItem -LiteralPath $Archive -Filter '*.apk' -File -Recurse)
+    if ($Built.Count -ne 1) { throw "Expected one APK in $Archive, found $($Built.Count)." }
+    if ($Built[0].Length -ge 2147483648) { throw ($Built[0].Name + ' is ' + $Built[0].Length + ' bytes; Android cannot install an APK at or above 2 GB.') }
+    $Movies = Join-Path $Root 'Saved\StagedBuilds\Android_ASTC\PRJ381\Content\Media\Movies'
+    if (!(Test-Path -LiteralPath $Movies)) { throw 'Content\Media\Movies was not staged; check +DirectoriesToAlwaysStageAsNonUFS in Config\DefaultGame.ini.' }
+    Write-Host ('Download build ready: ' + $Built[0].FullName + ' (' + [Math]::Round($Built[0].Length / 1MB, 1) + ' MB)')
+}
 function Build-Quest {
     Write-Host '=== Meta Quest / Development / ASTC / APK ==='
     # Quest is NOT a Google Play PAD target. Do not inherit the mobile bundle settings.
@@ -272,9 +300,10 @@ try {
     Push-Location $Root
     try {
         switch ($Target) {
-            'All' { Build-Windows; Build-AndroidPad; Build-Quest }
+            'All' { Build-Windows; Build-Quest }
             'Windows' { Build-Windows }
-            'Android' { Build-AndroidPad }
+            'Android' { throw 'The Android AAB/GooglePAD target is retired: bPackageDataInsideApk=True makes the GooglePAD APL disable itself, so no asset packs are generated and the AAB cannot pass chunk validation. Use Download for the website APK.' }
+            'Download' { Build-Download }
             'Quest' { Build-Quest }
         }
     } finally { Pop-Location }

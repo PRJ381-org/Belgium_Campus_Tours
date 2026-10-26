@@ -2,7 +2,7 @@
 setlocal EnableDelayedExpansion
 title PRJ381 CI/CD Build Script
 
-:: Usage: build_all.bat [All|Windows|Android|Quest|Validate] [--ci]
+:: Usage: build_all.bat [All|Windows|Download|Quest|Validate] [--ci]
 set "BUILD_TARGET=%~1"
 set "CI_MODE=%~2"
 if not defined BUILD_TARGET set "BUILD_TARGET=All"

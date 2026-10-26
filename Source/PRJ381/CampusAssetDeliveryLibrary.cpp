@@ -1,5 +1,8 @@
 #include "CampusAssetDeliveryLibrary.h"
 
+#include "AssetRegistry/ARFilter.h"
+#include "AssetRegistry/AssetData.h"
+#include "AssetRegistry/IAssetRegistry.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
 #include "HAL/FileManager.h"
@@ -34,7 +37,8 @@ class FCampusPADAction final : public FPendingLatentAction
 {
 public:
 	FCampusPADAction(UWorld* World, const TArray<FString>& PackNames,
-		const FLatentActionInfo& LatentInfo, bool& Success, FString& Error)
+		const FLatentActionInfo& LatentInfo, bool& Success, FString& Error,
+		bool bContentAlreadyAvailable)
 		: WorldKey(World), ExecutionFunction(LatentInfo.ExecutionFunction),
 		  OutputLink(LatentInfo.Linkage), CallbackTarget(LatentInfo.CallbackTarget),
 		  OutSuccess(Success), OutError(Error), StartedAt(FPlatformTime::Seconds())
@@ -44,6 +48,17 @@ public:
 		if (!UCampusAssetDeliveryLibrary::IsCampusPADRequired())
 		{
 			OutSuccess = true;
+			bFinished = true;
+			return;
+		}
+		// The caller already found the target level in mounted content, so there is nothing to fetch.
+		// Finish on the first UpdateOperation rather than returning from the caller: the latent node's
+		// output link is only ever triggered from FinishAndTriggerIf inside UpdateOperation, so a bare
+		// return there would leave the Blueprint exec chain pending forever.
+		if (bContentAlreadyAvailable)
+		{
+			OutSuccess = true;
+			OutError.Reset();
 			bFinished = true;
 			return;
 		}
@@ -331,6 +346,56 @@ private:
 };
 }
 
+namespace
+{
+	/**
+	 * True when the target level is already present in mounted content, so there is nothing to fetch.
+	 * A single-APK sideload build (bEnableBundle=False, bGenerateNoChunks=True) ships every level inside
+	 * its base pak and contains no asset packs at all; without this check the gate would wait on a
+	 * download that cannot exist. On a chunked GooglePAD build the level lives in its own pack, so this
+	 * stays false until that pack is mounted and the existing download path still runs.
+	 */
+	bool IsCampusLevelAvailable(const FName TargetLevel)
+	{
+		const FString Raw = TargetLevel.ToString();
+		if (Raw.IsEmpty())
+		{
+			return false;
+		}
+
+		// Callers pass either a full package path or the bare level asset name used by the chunk map.
+		const FString PackageName = Raw.Contains(TEXT("/")) ? Raw : FString();
+		const FName AssetName = PackageName.IsEmpty() ? TargetLevel : FName(*FPackageName::GetShortName(PackageName));
+
+		IAssetRegistry* Registry = IAssetRegistry::Get();
+		if (Registry)
+		{
+			TArray<FAssetData> Found;
+			if (PackageName.IsEmpty())
+			{
+				FARFilter Filter;
+				Filter.ClassPaths.Add(UWorld::StaticClass()->GetClassPathName());
+				Filter.bRecursivePaths = true;
+				Registry->GetAssets(Filter, Found);
+			}
+			else
+			{
+				Registry->GetAssetsByPackageName(FName(*PackageName), Found);
+			}
+			for (const FAssetData& Asset : Found)
+			{
+				if (Asset.AssetName == AssetName)
+				{
+					return true;
+				}
+			}
+		}
+
+		// Fallback for builds where the registry cannot resolve the asset name.
+		return !PackageName.IsEmpty() && FPackageName::DoesPackageExist(PackageName);
+	}
+}
+
 bool UCampusAssetDeliveryLibrary::IsCampusPADRequired()
 {
 #if PLATFORM_ANDROID && !WITH_EDITOR && PRJ381_WITH_GOOGLEPAD
@@ -374,11 +439,17 @@ void UCampusAssetDeliveryLibrary::EnsureCampusContentReady(UObject* WorldContext
 		ErrorMessage = TEXT("No game world is available for asset delivery.");
 		return;
 	}
+	// Nothing to deliver when the level is already in mounted content, which is always the case for a
+	// non-chunked build. The result is forwarded to the latent action instead of returning here, because
+	// the Blueprint node resumes only through FLatentResponse inside UpdateOperation.
+	const bool bContentAlreadyAvailable = IsCampusLevelAvailable(TargetLevel);
 	FLatentActionManager& Manager = World->GetLatentActionManager();
 	if (!Manager.FindExistingAction<FCampusPADAction>(LatentInfo.CallbackTarget, LatentInfo.UUID))
 	{
 		Manager.AddNewAction(LatentInfo.CallbackTarget, LatentInfo.UUID,
-			new FCampusPADAction(World, GetCampusAssetPacks(TargetLevel), LatentInfo, bSuccess, ErrorMessage));
+			new FCampusPADAction(World,
+				bContentAlreadyAvailable ? TArray<FString>() : GetCampusAssetPacks(TargetLevel),
+				LatentInfo, bSuccess, ErrorMessage, bContentAlreadyAvailable));
 	}
 }
 
