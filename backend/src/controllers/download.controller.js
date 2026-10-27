@@ -1,5 +1,7 @@
 const AnalyticsEvent = require('../models/AnalyticsEvent');
+const DownloadClick = require('../models/DownloadClick');
 const asyncHandler = require('../utils/asyncHandler');
+const { normalizeTimeframe, timeframeFilter } = require('../utils/timeframe');
 
 // Default build specifications and distribution endpoints
 const BUILD_INFO = {
@@ -126,6 +128,33 @@ exports.handleDownloadRedirect = asyncHandler(async (req, res) => {
   // Redirect to CDN binary location
   const destination = target.cdnUrl;
   res.redirect(302, destination);
+});
+
+/**
+ * POST /api/downloads/clicks
+ * Records a click on a landing-page Download button (platform: windows | android).
+ */
+exports.recordDownloadClick = asyncHandler(async (req, res) => {
+  await DownloadClick.create({ platform: req.body.platform });
+  res.status(201).json({ success: true });
+});
+
+/**
+ * GET /api/downloads/clicks?timeframe=all|today|24h|7d|30d
+ * Download-button clicks per platform for the dashboard.
+ */
+exports.getDownloadClicks = asyncHandler(async (req, res) => {
+  const timeframe = normalizeTimeframe(req.query.timeframe);
+  const rows = await DownloadClick.aggregate([
+    { $match: timeframeFilter(timeframe) },
+    { $group: { _id: '$platform', count: { $sum: 1 } } },
+  ]);
+  const counts = Object.fromEntries(DownloadClick.PLATFORMS.map((p) => [p, 0]));
+  rows.forEach((r) => {
+    counts[r._id] = r.count;
+  });
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  res.json({ success: true, timeframe, ...counts, total });
 });
 
 exports.BUILD_INFO = BUILD_INFO;

@@ -28,6 +28,7 @@ const adminToken = signSessionToken({ _id: 'u2', email: 'a@bc.ac.za', role: 'adm
 // Every endpoint that returns data. Split by the privilege each one demands.
 const AUTHENTICATED_ROUTES = [
   ['get', '/api/leads'],
+  ['get', '/api/downloads/clicks'],
   ['get', '/api/analytics/events'],
   ['get', '/api/analytics/summary'],
   ['get', '/api/auth/me'],
@@ -115,6 +116,7 @@ describe('public ingest routes stay open to the headset', () => {
     ['/api/feedback', { rating: 5, name: 'Ann', email: 'ann@example.com' }],
     ['/api/tickets', { name: 'Ann', email: 'ann@example.com', category: 'other', subject: 's', message: 'm' }],
     ['/api/tickets/mine', { tickets: [] }],
+    ['/api/downloads/clicks', { platform: 'windows' }],
   ];
 
   test.each(PUBLIC_POSTS)('POST %s is not rejected as unauthenticated', async (path, payload) => {

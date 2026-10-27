@@ -6,25 +6,25 @@ const STEPS = [
   {
     title: 'True-to-scale campus',
     text: 'High-fidelity architectural scans recreate every hall, lab and courtyard — processed to run smoothly on every device.',
-    image: 'assets/image3.png',
+    image: 'assets/image3.webp',
     color: '#4099ff',
   },
   {
     title: 'Play your way',
     text: 'Teleport and hand-track on a standalone VR headset, or explore with WASD and mouse, or a touch joystick on your phone. No VR hardware required.',
-    image: 'assets/image5.png',
+    image: 'assets/image5.webp',
     color: '#2ed8b6',
   },
   {
     title: 'Interactive hotspots',
     text: 'Walk up to points of interest to discover courses, facilities and student life, and meet guide characters along the way.',
-    image: 'assets/image7.png',
+    image: 'assets/image7.webp',
     color: '#ffb64d',
   },
   {
     title: 'Optimised for mobile',
     text: 'Forward shading and pre-baked lighting keep framerates high on mobile VR chips and everyday smartphones.',
-    image: 'assets/image9.png',
+    image: 'assets/image9.webp',
     color: '#7759de',
   },
 ];

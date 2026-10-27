@@ -44,6 +44,11 @@ exports.listLeads = asyncHandler(async (req, res) => {
   const limit = Math.min(parseInt(req.query.limit, 10) || 200, 1000);
 
   const query = dateFilter || {};
-  const leads = await Lead.find(query).sort({ createdAt: -1 }).limit(limit);
-  res.json({ success: true, timeframe, count: leads.length, leads });
+  // count is the real total, not just how many rows fit under the limit - the
+  // dashboard's lead count would otherwise stop at 200.
+  const [leads, count] = await Promise.all([
+    Lead.find(query).sort({ createdAt: -1 }).limit(limit),
+    Lead.countDocuments(query),
+  ]);
+  res.json({ success: true, timeframe, count, leads });
 });

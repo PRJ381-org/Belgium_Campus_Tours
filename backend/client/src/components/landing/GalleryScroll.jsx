@@ -3,7 +3,7 @@ import Reveal from './Reveal.jsx';
 import { useScrollProgress } from '../../lib/scroll.js';
 
 const IMAGES = Array.from({ length: 12 }, (_, i) => ({
-  src: `assets/image${i === 0 ? '' : i + 1}.png`,
+  src: `assets/image${i === 0 ? '' : i + 1}.webp`,
   alt: `Virtual campus screenshot ${i + 1}`,
 }));
 

@@ -2355,6 +2355,32 @@ p.reveal {
   }
 }
 
+/* Slow devices (html.low-power, set by lib/perf.js): frosted-glass blur is
+   expensive to redraw every frame, so swap it for a slightly more solid tint.
+   Every animation stays. */
+.low-power .nav.scrolled .nav-inner,
+.low-power .nav.open .nav-inner,
+.low-power .nav.open .nav-links,
+.low-power .glass-card,
+.low-power .shot figcaption,
+.low-power .sw-panel {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.low-power .nav.scrolled .nav-inner,
+.low-power .nav.open .nav-inner {
+  background: rgba(21, 27, 38, 0.94);
+}
+
+.low-power .glass-card {
+  background: rgba(21, 27, 38, 0.85);
+}
+
+.low-power .shot figcaption {
+  background: rgba(15, 20, 29, 0.85);
+}
+
 /* Calm version for people who've asked their OS to reduce motion */
 @media (prefers-reduced-motion: reduce) {
   html {

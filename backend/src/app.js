@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const compression = require('compression');
 const morgan = require('morgan');
 const { CORS_ORIGIN, NODE_ENV } = require('./config/env');
 
@@ -51,6 +52,9 @@ app.use(
   })
 );
 app.use(cors(corsOptions));
+// gzip text responses (JS, CSS, HTML, JSON, CSV). Zips and images are already
+// compressed, so the default filter leaves them alone.
+app.use(compression());
 app.use(express.json({ limit: '100kb' }));
 if (NODE_ENV !== 'test') app.use(morgan('dev'));
 
@@ -69,7 +73,21 @@ app.use('/api/download', downloadBuildRoutes);
 
 
 // The web portal and dashboard live inside backend/public.
-app.use(express.static(path.join(__dirname, '..', 'public')));
+// Vite puts a content hash in every file name under static/, so those can be
+// cached for a year - a new build gets new names. Images keep their names, so
+// they get a week. The HTML pages are always revalidated so a deploy shows up
+// straight away.
+const publicDir = path.join(__dirname, '..', 'public');
+app.use(
+  express.static(publicDir, {
+    setHeaders(res, filePath) {
+      const rel = path.relative(publicDir, filePath).split(path.sep);
+      if (rel[0] === 'static') res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      else if (rel[0] === 'assets') res.setHeader('Cache-Control', 'public, max-age=604800');
+      else res.setHeader('Cache-Control', 'no-cache');
+    },
+  })
+);
 
 // Redirect legacy /dashboard URLs to /
 app.get(['/dashboard', '/dashboard/*'], (req, res) => res.redirect(302, '/'));

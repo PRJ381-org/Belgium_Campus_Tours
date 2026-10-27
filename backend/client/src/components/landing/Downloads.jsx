@@ -75,6 +75,24 @@ const PLATFORMS = [
   },
 ];
 
+// Count the click for the dashboard. sendBeacon still delivers if the browser
+// navigates away to start the download; failures are ignored so the download
+// itself is never held up.
+function trackClick(platform) {
+  const payload = JSON.stringify({ platform });
+  try {
+    if (navigator.sendBeacon?.('/api/downloads/clicks', new Blob([payload], { type: 'application/json' }))) return;
+  } catch {
+    // fall through to fetch
+  }
+  fetch('/api/downloads/clicks', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: payload,
+    keepalive: true,
+  }).catch(() => {});
+}
+
 export default function Downloads() {
   return (
     <section id="download" className="section downloads">
@@ -116,7 +134,7 @@ export default function Downloads() {
 
             <p className="download-why">{p.why}</p>
 
-            <a href={p.href} download={p.downloadAttr} className="pill pill-white download-cta">
+            <a href={p.href} download={p.downloadAttr} className="pill pill-white download-cta" onClick={() => trackClick(p.id)}>
               Download {p.file}
               <Icon name="download" size={16} />
             </a>

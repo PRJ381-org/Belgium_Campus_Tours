@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { prefersReducedMotion } from '../../lib/scroll.js';
+import { isLowPower, onLowPower } from '../../lib/perf.js';
 
 /**
  * Glossy, slowly morphing 3D blob (three.js), lit in the dashboard palette.
  * Tilts toward the mouse and spins faster as the hero scrolls away.
  * three.js is loaded on demand so it never delays the first paint; if WebGL
- * isn't available a CSS gradient orb is shown instead.
+ * isn't available a CSS gradient orb is shown instead. Slow devices get a
+ * lighter version (see lib/perf.js).
  */
 export default function Orb({ scrollRef }) {
   const mountRef = useRef(null);
@@ -20,9 +22,12 @@ export default function Orb({ scrollRef }) {
       let RoomEnvironment;
       let mergeVertices;
       try {
-        THREE = await import('three');
-        ({ RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js'));
-        ({ mergeVertices } = await import('three/addons/utils/BufferGeometryUtils.js'));
+        // Fetch all three chunks in parallel rather than one after another.
+        [THREE, { RoomEnvironment }, { mergeVertices }] = await Promise.all([
+          import('three'),
+          import('three/addons/environments/RoomEnvironment.js'),
+          import('three/addons/utils/BufferGeometryUtils.js'),
+        ]);
       } catch {
         setFallback(true);
         return;
@@ -32,12 +37,13 @@ export default function Orb({ scrollRef }) {
       const mount = mountRef.current;
       let renderer;
       try {
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+        renderer = new THREE.WebGLRenderer({ antialias: !isLowPower(), alpha: true, powerPreference: 'high-performance' });
       } catch {
         setFallback(true);
         return;
       }
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      const pixelRatio = () => Math.min(window.devicePixelRatio || 1, isLowPower() ? 1 : 2);
+      renderer.setPixelRatio(pixelRatio());
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       mount.appendChild(renderer.domElement);
@@ -50,17 +56,32 @@ export default function Orb({ scrollRef }) {
       const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
       scene.environment = envTexture;
 
-      // 96 segments looks smooth and keeps the per-frame morph cheap on phones.
+      // 96 segments looks smooth and keeps the per-frame morph cheap on phones;
+      // low-power devices get 56 (about a third of the vertices).
       // A sphere duplicates the vertices along its UV seam and at the poles, so
       // recomputed normals don't match there and a visible line appears. Drop
       // the (unused) UVs and normals and weld those vertices together.
-      const sphere = new THREE.SphereGeometry(1.6, 96, 96);
-      sphere.deleteAttribute('uv');
-      sphere.deleteAttribute('normal');
-      const geometry = mergeVertices(sphere);
-      sphere.dispose();
-      geometry.computeVertexNormals();
-      const base = geometry.attributes.position.array.slice();
+      const LOW_SEGMENTS = 56;
+      let segments;
+      let geometry;
+      let dirs;
+      let pos;
+      let arr;
+      const makeGeometry = (count) => {
+        segments = count;
+        const sphere = new THREE.SphereGeometry(1.6, count, count);
+        sphere.deleteAttribute('uv');
+        sphere.deleteAttribute('normal');
+        geometry = mergeVertices(sphere);
+        sphere.dispose();
+        geometry.computeVertexNormals();
+        // Unit direction of every vertex, worked out once instead of every frame.
+        dirs = geometry.attributes.position.array.slice();
+        for (let i = 0; i < dirs.length; i++) dirs[i] /= 1.6;
+        pos = geometry.attributes.position;
+        arr = pos.array;
+      };
+      makeGeometry(isLowPower() ? LOW_SEGMENTS : 96);
       const material = new THREE.MeshPhysicalMaterial({
         color: 0x0c1220,
         metalness: 1,
@@ -99,8 +120,6 @@ export default function Orb({ scrollRef }) {
       ro.observe(mount);
 
       const still = prefersReducedMotion();
-      const pos = geometry.attributes.position;
-      const v = new THREE.Vector3();
       const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
       const onMouse = (e) => {
         mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -116,14 +135,18 @@ export default function Orb({ scrollRef }) {
       io.observe(mount);
 
       const morph = (t) => {
-        for (let i = 0; i < pos.count; i++) {
-          v.set(base[i * 3], base[i * 3 + 1], base[i * 3 + 2]).normalize();
+        for (let i = 0; i < arr.length; i += 3) {
+          const x = dirs[i];
+          const y = dirs[i + 1];
+          const z = dirs[i + 2];
           const n =
-            Math.sin(v.x * 2.1 + t * 0.9) * Math.sin(v.y * 2.4 + t * 1.1) * 0.16 +
-            Math.sin(v.z * 3.1 + t * 0.7) * 0.08 +
-            Math.sin((v.x + v.y) * 1.5 - t * 0.6) * 0.07;
-          v.multiplyScalar(1.6 * (1 + n));
-          pos.setXYZ(i, v.x, v.y, v.z);
+            Math.sin(x * 2.1 + t * 0.9) * Math.sin(y * 2.4 + t * 1.1) * 0.16 +
+            Math.sin(z * 3.1 + t * 0.7) * 0.08 +
+            Math.sin((x + y) * 1.5 - t * 0.6) * 0.07;
+          const r = 1.6 * (1 + n);
+          arr[i] = x * r;
+          arr[i + 1] = y * r;
+          arr[i + 2] = z * r;
         }
         pos.needsUpdate = true;
         geometry.computeVertexNormals();
@@ -154,7 +177,23 @@ export default function Orb({ scrollRef }) {
         render();
       }
 
+      // If the page turns out to stutter, drop to the lighter orb on the fly.
+      const offLowPower = onLowPower(() => {
+        renderer.setPixelRatio(pixelRatio());
+        resize();
+        if (segments > LOW_SEGMENTS) {
+          geometry.dispose();
+          makeGeometry(LOW_SEGMENTS);
+          blob.geometry = geometry;
+        }
+        if (still) {
+          morph(1.2);
+          renderer.render(scene, camera);
+        }
+      });
+
       cleanup = () => {
+        offLowPower();
         cancelAnimationFrame(frame);
         ro.disconnect();
         io.disconnect();

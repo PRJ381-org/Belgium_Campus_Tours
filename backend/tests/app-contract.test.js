@@ -34,6 +34,30 @@ describe('GET /health', () => {
   });
 });
 
+describe('static file performance headers', () => {
+  test('HTML pages are revalidated so a deploy shows up straight away', async () => {
+    const res = await request(app).get('/');
+    expect(res.status).toBe(200);
+    expect(res.headers['cache-control']).toBe('no-cache');
+  });
+
+  test('images are cached for a week', async () => {
+    const res = await request(app).get('/assets/logo.png');
+    expect(res.status).toBe(200);
+    expect(res.headers['cache-control']).toBe('public, max-age=604800');
+  });
+
+  test('hashed build files are cached long-term and gzipped', async () => {
+    // Pick the landing page's script out of the built HTML, since its name changes every build.
+    const html = (await request(app).get('/')).text;
+    const script = html.match(/src="\.\/(static\/[^"]+\.js)"/)[1];
+    const res = await request(app).get(`/${script}`).set('Accept-Encoding', 'gzip');
+    expect(res.status).toBe(200);
+    expect(res.headers['cache-control']).toBe('public, max-age=31536000, immutable');
+    expect(res.headers['content-encoding']).toBe('gzip');
+  });
+});
+
 describe('CORS allowlist', () => {
   // CORS_ORIGIN is set to a two-entry list in tests/helpers/testEnv.js.
   test('allows a listed origin', async () => {

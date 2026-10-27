@@ -31,6 +31,7 @@ export default function CursorTrail() {
       target.x = e.clientX;
       target.y = e.clientY;
       layer.classList.add('on');
+      if (!frame) frame = requestAnimationFrame(loop);
     };
     const onLeave = () => layer.classList.remove('on');
 
@@ -38,19 +39,23 @@ export default function CursorTrail() {
       // Each dot chases the one in front of it, which makes the tail curve.
       let x = target.x;
       let y = target.y;
+      let moving = false;
       for (const d of dots) {
-        d.x += (x - d.x) * 0.45;
-        d.y += (y - d.y) * 0.45;
+        const dx = (x - d.x) * 0.45;
+        const dy = (y - d.y) * 0.45;
+        d.x += dx;
+        d.y += dy;
+        if (Math.abs(dx) > 0.05 || Math.abs(dy) > 0.05) moving = true;
         d.el.style.transform = `translate3d(${d.x}px, ${d.y}px, 0)`;
         x = d.x;
         y = d.y;
       }
-      frame = requestAnimationFrame(loop);
+      // Once the tail has caught up, stop until the mouse moves again.
+      frame = moving ? requestAnimationFrame(loop) : 0;
     };
 
     window.addEventListener('pointermove', onMove, { passive: true });
     document.documentElement.addEventListener('pointerleave', onLeave);
-    frame = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(frame);

@@ -3,6 +3,7 @@ import BtnGroup from '../../components/BtnGroup.jsx';
 import StatCard from '../../components/StatCard.jsx';
 import ChartCanvas from '../../components/ChartCanvas.jsx';
 import LeadsPanel from '../../components/LeadsPanel.jsx';
+import DownloadsPanel from '../../components/DownloadsPanel.jsx';
 import Icon from '../../components/Icon.jsx';
 import { eventTypeChartConfig, areaChartConfig, hotspotChartConfig } from '../../lib/chartConfigs.js';
 
@@ -24,9 +25,9 @@ function formatDuration(ms) {
 }
 
 /**
- * Main analytics page: KPIs, charts and recent leads.
+ * Main analytics page: KPIs, charts and the lead count.
  */
-export default function Overview({ summary, leads, leadCount, timeframe, onTimeframe, isAdmin, theme, refreshing, onRefresh }) {
+export default function Overview({ summary, leadCount, downloads, timeframe, onTimeframe, isAdmin, theme, refreshing, onRefresh }) {
   const charts = useMemo(
     () =>
       summary && {
@@ -109,7 +110,10 @@ export default function Overview({ summary, leads, leadCount, timeframe, onTimef
             <div className="chart-box">{charts && <ChartCanvas config={charts.hotspots} />}</div>
           </div>
         </div>
-        <LeadsPanel leads={leads} isAdmin={isAdmin} />
+        <div className="card-stack">
+          <LeadsPanel count={leadCount} isAdmin={isAdmin} />
+          <DownloadsPanel counts={downloads} />
+        </div>
       </section>
     </>
   );

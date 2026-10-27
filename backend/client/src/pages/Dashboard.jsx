@@ -35,8 +35,8 @@ export default function Dashboard() {
 
   const [timeframe, setTimeframe] = useState('all');
   const [summary, setSummary] = useState(null);
-  const [leads, setLeads] = useState([]);
   const [leadCount, setLeadCount] = useState(null);
+  const [downloads, setDownloads] = useState(null);
   const [users, setUsers] = useState([]);
   const [online, setOnline] = useState(true);
   const [error, setError] = useState('');
@@ -71,15 +71,16 @@ export default function Dashboard() {
   const loadDashboard = useCallback(async () => {
     setError('');
     try {
-      const [summaryRes, leadsRes, usersRes] = await Promise.all([
+      const [summaryRes, leadsRes, downloadsRes, usersRes] = await Promise.all([
         fetchJson(`/api/analytics/summary?timeframe=${encodeURIComponent(timeframe)}`),
         fetchJson(`/api/leads?timeframe=${encodeURIComponent(timeframe)}`),
+        fetchJson(`/api/downloads/clicks?timeframe=${encodeURIComponent(timeframe)}`).catch(() => null),
         fetchJson('/api/auth/users').catch(() => ({ users: [] })),
       ]);
       setOnline(true);
       setSummary(summaryRes);
       setLeadCount(leadsRes.count);
-      setLeads(leadsRes.leads || []);
+      setDownloads(downloadsRes);
       setUsers(usersRes.users || []);
     } catch (err) {
       setOnline(false);
@@ -190,8 +191,8 @@ export default function Dashboard() {
           {currentPage === 'overview' && (
             <Overview
               summary={summary}
-              leads={leads}
               leadCount={leadCount}
+              downloads={downloads}
               timeframe={timeframe}
               onTimeframe={setTimeframe}
               isAdmin={isAdmin}
