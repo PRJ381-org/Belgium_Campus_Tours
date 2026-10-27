@@ -12,11 +12,9 @@ void UCampusAreaTracker::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	// Fires after any level finishes loading (including gate travel).
 	PostLoadMapHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(
 		this, &UCampusAreaTracker::OnPostLoadMap);
 
-	// So the first area_enter can wait for the session id if needed.
 	if (UGameInstance* GI = GetGameInstance())
 	{
 		if (UCampusIdentitySubsystem* Id = GI->GetSubsystem<UCampusIdentitySubsystem>())
@@ -51,12 +49,38 @@ void UCampusAreaTracker::Deinitialize()
 
 void UCampusAreaTracker::OnPostLoadMap(UWorld* LoadedWorld)
 {
+	// Once a gate has reported a streamed sublevel, the map name is always the
+	// persistent level and would overwrite the real area.
+	if (bManualArea)
+	{
+		return;
+	}
 	UpdateAreaFromWorld(LoadedWorld);
 }
 
 void UCampusAreaTracker::HandleSessionReady(const FString& /*InSessionId*/)
 {
+	if (bManualArea)
+	{
+		// Session resolved after a gate set the area: fire the pending enter.
+		ApplyArea(CurrentArea);
+		return;
+	}
 	UpdateAreaFromWorld(GetGameInstance() ? GetGameInstance()->GetWorld() : nullptr);
+}
+
+void UCampusAreaTracker::SetArea(const FString& NewArea)
+{
+	FString Clean = NewArea;
+	Clean.RemoveFromStart(TEXT("LVL_")); // "LVL_TechnoLab" -> "TechnoLab"
+
+	if (Clean.IsEmpty())
+	{
+		return;
+	}
+
+	bManualArea = true;
+	ApplyArea(Clean);
 }
 
 FString UCampusAreaTracker::DeriveArea(UWorld* World)
@@ -66,14 +90,27 @@ FString UCampusAreaTracker::DeriveArea(UWorld* World)
 		return FString();
 	}
 	FString MapName = World->GetMapName();
-	MapName.RemoveFromStart(World->StreamingLevelsPrefix); // strip PIE prefix e.g. "UEDPIE_0_"
-	MapName.RemoveFromStart(TEXT("LVL_"));                 // "LVL_TechnoLab" -> "TechnoLab"
+	MapName.RemoveFromStart(World->StreamingLevelsPrefix); // strip PIE prefix "UEDPIE_0_"
+	MapName.RemoveFromStart(TEXT("LVL_"));
 	return MapName;
 }
 
 void UCampusAreaTracker::UpdateAreaFromWorld(UWorld* World)
 {
-	const FString NewArea = DeriveArea(World);
+	const FString Derived = DeriveArea(World);
+
+	// The persistent level is a container that's always loaded, not a place the
+	// player visits. Real areas are reported by the gates via SetArea().
+	if (Derived.Equals(TEXT("Persistent"), ESearchCase::IgnoreCase))
+	{
+		return;
+	}
+
+	ApplyArea(Derived);
+}
+
+void UCampusAreaTracker::ApplyArea(const FString& NewArea)
+{
 	if (NewArea.IsEmpty())
 	{
 		return;
@@ -88,7 +125,7 @@ void UCampusAreaTracker::UpdateAreaFromWorld(UWorld* World)
 		}
 	}
 
-	// Same area as before (e.g. session became ready after the map loaded).
+	// Same area as before (e.g. session became ready after the area was set).
 	if (NewArea == CurrentArea)
 	{
 		if (!bEnterSent && bSessionReady)
@@ -133,7 +170,7 @@ void UCampusAreaTracker::SendAreaEvent(const FString& EventType, const FString& 
 	}
 	if (SessionId.IsEmpty())
 	{
-		return; // not ready yet; will fire once the session resolves
+		return; // not ready yet; fires once the session resolves
 	}
 
 	if (UCampusBackendClient* Backend = GI->GetSubsystem<UCampusBackendClient>())
